@@ -1,0 +1,16 @@
+{
+  "description": "Promised Models",
+  "name": "promised-models",
+  "version": "0.0.1",
+  "repository": "git@github.com:delfrrr/promised-models.git",
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha -u bdd -R spec test"
+  },
+  "devDependencies": {
+    "chai": "2.3.0",
+    "mocha": "2.2.4"
+  }
+}
