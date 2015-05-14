@@ -58,3 +58,53 @@ describe('Models.get', function () {
         }).to.throw(Error);
     });
 });
+
+describe('Models.set', function () {
+    var ModelClass = require('./models/simple'),
+        model = new ModelClass();
+
+    it('should exist', function () {
+        expect(model.set).to.be.a('function');
+    });
+    it('should set value', function () {
+        model.set('a', 'a2');
+        expect(model.get('a')).to.be.equal('a2');
+    });
+    it('should set hash', function () {
+        model.set({
+            a: 'a3',
+            b: 'b3',
+            c: 'c3'
+        });
+        expect(model.get('a')).to.be.equal('a3');
+        expect(model.get('b')).to.be.equal('b3');
+        expect(function () {
+            model.get('c');
+        }).to.throw(Error);
+    });
+});
+
+describe('Models.toJSON', function () {
+    var ModelClass = require('./models/simple');
+
+    it('should exist', function () {
+        var model = new ModelClass();
+        expect(model.toJSON).to.be.a('function');
+    });
+
+    it('should return data', function () {
+        var data = {
+            a: 'aData',
+            b: 'bData'
+        },
+        model = new ModelClass(data);
+        expect(model.toJSON()).to.have.property('a', 'aData');
+        expect(model.toJSON()).to.have.property('b', 'bData');
+    });
+
+    it('should support internal', function () {
+        var model = new ModelClass();
+        expect(model.toJSON()).to.have.not.property('c');
+    });
+});
+
