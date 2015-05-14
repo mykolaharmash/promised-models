@@ -1,5 +1,17 @@
 var expect = require('chai').expect;
 
+describe('Models create', function () {
+    describe('with init data', function () {
+        var ModelClass = require('./models/simple'),
+            model = new ModelClass({
+                a: 'a1'
+            });
+        it('should get init values', function () {
+            expect(model.get('a')).to.be.equal('a1');
+        });
+    });
+});
+
 describe('Models.inherit', function () {
     var ModelClass = require('./models/simple'),
     InheritedClass = ModelClass.inherit({
