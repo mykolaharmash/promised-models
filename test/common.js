@@ -108,3 +108,86 @@ describe('Models.toJSON', function () {
     });
 });
 
+describe('Models events', function () {
+    var ModelClass = require('./models/simple');
+    describe('Models.on', function () {
+        it('should bind on few events', function () {
+            var model = new ModelClass(),
+                count = 0;
+            model.on('change:a change:b', function () {
+                count++;
+            });
+            model.set('a', 'a1');
+            model.set('b', 'b1');
+            expect(count).to.be.equal(2);
+        });
+        it('should bind on fields and events', function () {
+            var model = new ModelClass(),
+                count = 0;
+            model.on('a b', 'change', function () {
+                count++;
+            });
+            model.set('a', 'a1');
+            model.set('b', 'b1');
+            expect(count).to.be.equal(2);
+        });
+    });
+    describe('Models.un', function () {
+        var model, count;
+        beforeEach(function () {
+            model = new ModelClass();
+            count = 0;
+        });
+        it('should unsubscribe from event', function (done) {
+            var cb = function () {
+                count++;
+            };
+            model.on('change', cb);
+            model.set('a', 'a1');
+            setTimeout(function () {
+                expect(count).to.be.equal(1);
+                model.un('change', cb);
+                model.set('a', 'a2');
+                setTimeout(function () {
+                    expect(count).to.be.equal(1);
+                    expect(model.get('a')).to.be.equal('a2');
+                    done();
+                });
+            });
+        });
+    });
+    describe('change', function () {
+        var model = new ModelClass(),
+            count = 0;
+        model.on('change', function () {
+            count++;
+        });
+        it('should call change event once', function (done) {
+            model.set('a', 'a1');
+            model.set('a', 'a2');
+            expect(count).to.be.equal(0);
+            setTimeout(function () {
+                expect(count).to.be.equal(1);
+                expect(model.get('a')).to.be.equal('a2');
+                done();
+            });
+        });
+
+    });
+    describe('change:field', function () {
+        var model, count;
+        beforeEach(function () {
+            model = new ModelClass();
+            count = 0;
+        });
+        it('should call change:field for every set', function () {
+            model.on('change:a', function () {
+                count++;
+            });
+            model.set('a', 'a1');
+            model.set('a', 'a2');
+            expect(count).to.be.equal(2);
+        });
+    });
+});
+

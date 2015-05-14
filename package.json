@@ -14,7 +14,8 @@
     "mocha": "2.2.4"
   },
   "dependencies": {
-    "inherit": "^2.2.2",
-    "vow": "^0.4.9"
+    "eventemitter3": "1.1.0",
+    "inherit": "2.2.2",
+    "lodash.debounce": "3.0.3"
   }
 }
