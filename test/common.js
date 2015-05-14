@@ -74,12 +74,12 @@ describe('Models.set', function () {
         model.set({
             a: 'a3',
             b: 'b3',
-            c: 'c3'
+            unknown: 'unknown'
         });
         expect(model.get('a')).to.be.equal('a3');
         expect(model.get('b')).to.be.equal('b3');
         expect(function () {
-            model.get('c');
+            model.get('unknown');
         }).to.throw(Error);
     });
 });
