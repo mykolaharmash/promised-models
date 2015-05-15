@@ -191,3 +191,68 @@ describe('Models events', function () {
     });
 });
 
+describe('rollback', function () {
+    var ModelClass = require('./models/simple');
+    describe('Models.isChanged', function () {
+        var model;
+        beforeEach(function () {
+            model = new ModelClass({
+                a: 'a1'
+            });
+        });
+        it('should be false after init', function () {
+            expect(model.isChanged()).to.be.equal(false);
+        });
+        it('should be true after set', function () {
+            model.set('b', 'b1');
+            expect(model.isChanged()).to.be.equal(true);
+        });
+    });
+    describe('Models.rollback', function () {
+        var model;
+        beforeEach(function () {
+            model = new ModelClass({
+                a: 'a1'
+            });
+        });
+        it('should return initial value', function () {
+            model.set('a', 'a2');
+            expect(model.get('a')).to.be.equal('a2');
+            expect(model.isChanged()).to.be.equal(true);
+            model.rollback();
+            expect(model.get('a')).to.be.equal('a1');
+            expect(model.isChanged()).to.be.equal(false);
+        });
+        it('should cause change events', function (done) {
+            var count = 0;
+            model.on('change', function () {
+                count++;
+            });
+            model.set('a', 'a2');
+            setTimeout(function () {
+                expect(count).to.be.equal(1);
+                model.rollback();
+                setTimeout(function () {
+                    expect(count).to.be.equal(2);
+                    done();
+                });
+            });
+        });
+    });
+    describe('Models.fix', function () {
+        var model;
+        beforeEach(function () {
+            model = new ModelClass({
+                a: 'a1'
+            });
+        });
+        it('after fix isChanged should be false', function () {
+            model.set('a', 'a2');
+            expect(model.isChanged()).to.be.equal(true);
+            model.fix();
+            expect(model.isChanged()).to.be.equal(false);
+            expect(model.get('a')).to.be.equal('a2');
+        });
+    });
+});
+
