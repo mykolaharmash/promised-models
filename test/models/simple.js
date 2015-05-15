@@ -18,6 +18,13 @@ module.exports = Models.inherit({
             type: 'string',
             internal: true,
             default: 'c'
+        },
+        withValidation: {
+            type: 'string',
+            default: 'validValue',
+            validate: function () {
+                return this.value === 'validValue';
+            }
         }
     },
     propA: 'propA'

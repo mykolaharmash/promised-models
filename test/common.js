@@ -111,7 +111,7 @@ describe('Models.toJSON', function () {
 describe('Models events', function () {
     var ModelClass = require('./models/simple');
     describe('Models.on', function () {
-        it('should bind on few events', function () {
+        it('should bind on few events', function (done) {
             var model = new ModelClass(),
                 count = 0;
             model.on('change:a change:b', function () {
@@ -119,9 +119,12 @@ describe('Models events', function () {
             });
             model.set('a', 'a1');
             model.set('b', 'b1');
-            expect(count).to.be.equal(2);
+            setTimeout(function () {
+                expect(count).to.be.equal(2);
+                done();
+            });
         });
-        it('should bind on fields and events', function () {
+        it('should bind on fields and events', function (done) {
             var model = new ModelClass(),
                 count = 0;
             model.on('a b', 'change', function () {
@@ -129,7 +132,10 @@ describe('Models events', function () {
             });
             model.set('a', 'a1');
             model.set('b', 'b1');
-            expect(count).to.be.equal(2);
+            setTimeout(function () {
+                expect(count).to.be.equal(2);
+                done();
+            });
         });
     });
     describe('Models.un', function () {
@@ -180,18 +186,22 @@ describe('Models events', function () {
             model = new ModelClass();
             count = 0;
         });
-        it('should call change:field for every set', function () {
+        it('should call change:field async', function (done) {
             model.on('change:a', function () {
                 count++;
             });
             model.set('a', 'a1');
             model.set('a', 'a2');
-            expect(count).to.be.equal(2);
+            expect(count).to.be.equal(0);
+            setTimeout(function () {
+                expect(count).to.be.equal(1);
+                done();
+            });
         });
     });
 });
 
-describe('rollback', function () {
+describe('revert', function () {
     var ModelClass = require('./models/simple');
     describe('Models.isChanged', function () {
         var model;
@@ -208,7 +218,7 @@ describe('rollback', function () {
             expect(model.isChanged()).to.be.equal(true);
         });
     });
-    describe('Models.rollback', function () {
+    describe('Models.revert', function () {
         var model;
         beforeEach(function () {
             model = new ModelClass({
@@ -219,7 +229,7 @@ describe('rollback', function () {
             model.set('a', 'a2');
             expect(model.get('a')).to.be.equal('a2');
             expect(model.isChanged()).to.be.equal(true);
-            model.rollback();
+            model.revert();
             expect(model.get('a')).to.be.equal('a1');
             expect(model.isChanged()).to.be.equal(false);
         });
@@ -231,7 +241,7 @@ describe('rollback', function () {
             model.set('a', 'a2');
             setTimeout(function () {
                 expect(count).to.be.equal(1);
-                model.rollback();
+                model.revert();
                 setTimeout(function () {
                     expect(count).to.be.equal(2);
                     done();
@@ -239,20 +249,23 @@ describe('rollback', function () {
             });
         });
     });
-    describe('Models.fix', function () {
+    describe('Models.commit', function () {
         var model;
         beforeEach(function () {
             model = new ModelClass({
                 a: 'a1'
             });
         });
-        it('after fix isChanged should be false', function () {
+        it('after commit isChanged should be false', function () {
             model.set('a', 'a2');
             expect(model.isChanged()).to.be.equal(true);
-            model.fix();
+            model.commit();
             expect(model.isChanged()).to.be.equal(false);
             expect(model.get('a')).to.be.equal('a2');
         });
     });
 });
 
+describe('validation', function () {
+
+});
