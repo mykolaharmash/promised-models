@@ -109,7 +109,7 @@ describe('Models.toJSON', function () {
     });
 });
 
-describe('Models events', function () {
+describe('Events', function () {
     var ModelClass = require('./models/simple');
     describe('Models.on', function () {
         it('should bind on few events', function (done) {
@@ -117,26 +117,24 @@ describe('Models events', function () {
                 count = 0;
             model.on('change:a change:b', function () {
                 count++;
+                if (count >= 2) {
+                    done();
+                }
             });
             model.set('a', 'a1');
             model.set('b', 'b1');
-            setTimeout(function () {
-                expect(count).to.be.equal(2);
-                done();
-            });
         });
         it('should bind on fields and events', function (done) {
             var model = new ModelClass(),
                 count = 0;
             model.on('a b', 'change', function () {
                 count++;
+                if (count >= 2) {
+                    done();
+                }
             });
             model.set('a', 'a1');
             model.set('b', 'b1');
-            setTimeout(function () {
-                expect(count).to.be.equal(2);
-                done();
-            });
         });
     });
     describe('Models.un', function () {
@@ -147,37 +145,25 @@ describe('Models events', function () {
         });
         it('should unsubscribe from event', function (done) {
             var cb = function () {
-                count++;
+                model.un('change', cb);
+                model.set('a', 'a2');
+                done();
             };
             model.on('change', cb);
             model.set('a', 'a1');
-            setTimeout(function () {
-                expect(count).to.be.equal(1);
-                model.un('change', cb);
-                model.set('a', 'a2');
-                setTimeout(function () {
-                    expect(count).to.be.equal(1);
-                    expect(model.get('a')).to.be.equal('a2');
-                    done();
-                });
-            });
         });
     });
     describe('change', function () {
         var model = new ModelClass(),
             count = 0;
-        model.on('change', function () {
-            count++;
-        });
         it('should call change event once', function (done) {
-            model.set('a', 'a1');
-            model.set('a', 'a2');
-            expect(count).to.be.equal(0);
-            setTimeout(function () {
-                expect(count).to.be.equal(1);
+            model.on('change', function () {
+                count++;
                 expect(model.get('a')).to.be.equal('a2');
                 done();
             });
+            model.set('a', 'a1');
+            model.set('a', 'a2');
         });
 
     });
@@ -190,79 +176,141 @@ describe('Models events', function () {
         it('should call change:field async', function (done) {
             model.on('change:a', function () {
                 count++;
+                expect(model.get('a')).to.be.equal('a2');
+                done();
             });
             model.set('a', 'a1');
             model.set('a', 'a2');
             expect(count).to.be.equal(0);
-            setTimeout(function () {
-                expect(count).to.be.equal(1);
-                done();
-            });
         });
     });
 });
 
-describe('revert', function () {
+describe('Commit', function () {
     var ModelClass = require('./models/simple');
-    describe('Models.isChanged', function () {
-        var model;
-        beforeEach(function () {
-            model = new ModelClass({
-                a: 'a1'
+    describe('default branch', function () {
+        describe('Models.isChanged', function () {
+            var model;
+            beforeEach(function () {
+                model = new ModelClass({
+                    a: 'a1'
+                });
+            });
+            it('should be false after init', function () {
+                expect(model.isChanged()).to.be.equal(false);
+            });
+            it('should be true after set', function () {
+                model.set('b', 'b1');
+                expect(model.isChanged()).to.be.equal(true);
             });
         });
-        it('should be false after init', function () {
-            expect(model.isChanged()).to.be.equal(false);
-        });
-        it('should be true after set', function () {
-            model.set('b', 'b1');
-            expect(model.isChanged()).to.be.equal(true);
-        });
-    });
-    describe('Models.revert', function () {
-        var model;
-        beforeEach(function () {
-            model = new ModelClass({
-                a: 'a1'
+        describe('Models.revert', function () {
+            var model;
+            beforeEach(function () {
+                model = new ModelClass({
+                    a: 'a1'
+                });
             });
-        });
-        it('should return initial value', function () {
-            model.set('a', 'a2');
-            expect(model.get('a')).to.be.equal('a2');
-            expect(model.isChanged()).to.be.equal(true);
-            model.revert();
-            expect(model.get('a')).to.be.equal('a1');
-            expect(model.isChanged()).to.be.equal(false);
-        });
-        it('should cause change events', function (done) {
-            var count = 0;
-            model.on('change', function () {
-                count++;
-            });
-            model.set('a', 'a2');
-            setTimeout(function () {
-                expect(count).to.be.equal(1);
+            it('should return initial value', function () {
+                model.set('a', 'a2');
+                expect(model.get('a')).to.be.equal('a2');
+                expect(model.isChanged()).to.be.equal(true);
                 model.revert();
+                expect(model.get('a')).to.be.equal('a1');
+                expect(model.isChanged()).to.be.equal(false);
+            });
+            it('should cause change events', function (done) {
+                var count = 0;
+                model.on('change', function () {
+                    count++;
+                });
+                model.set('a', 'a2');
                 setTimeout(function () {
-                    expect(count).to.be.equal(2);
-                    done();
+                    expect(count).to.be.equal(1);
+                    model.revert();
+                    setTimeout(function () {
+                        expect(count).to.be.equal(2);
+                        done();
+                    });
                 });
             });
         });
-    });
-    describe('Models.commit', function () {
-        var model;
-        beforeEach(function () {
-            model = new ModelClass({
-                a: 'a1'
+        describe('Models.commit', function () {
+            var model;
+            beforeEach(function () {
+                model = new ModelClass({
+                    a: 'a1'
+                });
+            });
+            it('after commit isChanged should be false', function () {
+                model.set('a', 'a2');
+                expect(model.isChanged()).to.be.equal(true);
+                model.commit();
+                expect(model.isChanged()).to.be.equal(false);
+                expect(model.get('a')).to.be.equal('a2');
             });
         });
-        it('after commit isChanged should be false', function () {
-            model.set('a', 'a2');
-            expect(model.isChanged()).to.be.equal(true);
-            model.commit();
-            expect(model.isChanged()).to.be.equal(false);
-            expect(model.get('a')).to.be.equal('a2');
+    });
+
+    describe('custom branch', function () {
+        describe('Models.isChanged', function () {
+            var model;
+            beforeEach(function () {
+                model = new ModelClass({
+                    a: 'a1'
+                });
+            });
+            it('should be true before commit', function () {
+                expect(model.isChanged('custom')).to.be.equal(true);
+            });
+            it('should be false after commit', function () {
+                model.commit('custom');
+                expect(model.isChanged('custom')).to.be.equal(false);
+            });
+            it('should be true after set', function () {
+                model.set('b', 'b1');
+                expect(model.isChanged('custom')).to.be.equal(true);
+            });
+            it('should have different values for different branches', function () {
+                model.set('b', 'b1');
+                expect(model.isChanged('custom')).to.be.equal(true);
+                model.commit('custom');
+                expect(model.isChanged('custom')).to.be.equal(false);
+                expect(model.isChanged()).to.be.equal(true);
+            });
+        });
+        describe('Models.revert', function () {
+            var model;
+            beforeEach(function () {
+                model = new ModelClass({
+                    a: 'a1'
+                });
+            });
+            it('should return initial value', function () {
+                model.commit('custom');
+                model.set('a', 'a2');
+                expect(model.get('a')).to.be.equal('a2');
+                expect(model.isChanged('custom')).to.be.equal(true);
+                model.revert('custom');
+                expect(model.get('a')).to.be.equal('a1');
+                expect(model.isChanged('custom')).to.be.equal(false);
+            });
+        });
+        describe('Models.commit', function () {
+            var model;
+            beforeEach(function () {
+                model = new ModelClass({
+                    a: 'a1'
+                });
+            });
+            it('after commit isChanged should be false', function () {
+                model.set('a', 'a2');
+                expect(model.isChanged('custom')).to.be.equal(true);
+                model.commit('custom');
+                expect(model.isChanged('custom')).to.be.equal(false);
+                expect(model.isChanged()).to.be.equal(true);
+                expect(model.get('a')).to.be.equal('a2');
+            });
         });
     });
 });
@@ -316,5 +364,78 @@ describe('Model.validate', function () {
             }
         });
     });
+});
 
+describe('Calculations', function () {
+    var ModelClass = require('./models/with-calculations');
+    describe('Calculate', function () {
+        it('should calculate value on init', function () {
+            var model = new ModelClass();
+            return model.ready().then(function () {
+                expect(model.get('b')).to.be.equal('b-0');
+            });
+        });
+        it('should calculate depended value on init', function () {
+            var model = new ModelClass();
+            return model.ready().then(function () {
+                expect(model.get('c')).to.be.equal('c-0');
+            });
+        });
+        it('should calculate async depended values on init', function () {
+            var model = new ModelClass();
+            return model.ready().then(function () {
+                expect(model.get('asyncDepended')).to.be.equal('a-0-b-0-c-0-async');
+            });
+        });
+        it('should calculate values after set', function () {
+            var model = new ModelClass();
+            model.set('a', 'a-1');
+            return model.ready().then(function () {
+                expect(model.get('asyncDepended')).to.be.equal('a-1-b-1-c-1-async');
+            });
+        });
+        it('should trigger change:field with final calculation result', function (done) {
+            var model = new ModelClass();
+            model.on('change:asyncDepended', function () {
+               expect(model.get('asyncDepended')).to.be.equal('a-0-b-0-c-0-async');
+               done();
+            });
+        });
+        it('should trigger change with final calculation result', function (done) {
+            var model = new ModelClass();
+            model.on('change', function () {
+               expect(model.get('a')).to.be.equal('a-0');
+               expect(model.get('b')).to.be.equal('b-0');
+               expect(model.get('c')).to.be.equal('c-0');
+               expect(model.get('async')).to.be.equal('async');
+               expect(model.get('asyncDepended')).to.be.equal('a-0-b-0-c-0-async');
+               done();
+            });
+        });
+        it('should not fire events after ready', function (done) {
+            var model = new ModelClass();
+            model.ready().then(function () {
+                model.on('change', function () {
+                    done();
+                });
+                done();
+            }).done();
+        });
+        it('should trigger change after ready and then set', function (done) {
+            var model = new ModelClass();
+            model.ready().then(function () {
+                model.set('a', 'a-1');
+                model.on('change', function () {
+                   expect(model.get('a')).to.be.equal('a-1');
+                   expect(model.get('b')).to.be.equal('b-1');
+                   expect(model.get('c')).to.be.equal('c-1');
+                   expect(model.get('async')).to.be.equal('async');
+                   expect(model.get('asyncDepended')).to.be.equal('a-1-b-1-c-1-async');
+                   done();
+                });
+                model.ready().done();
+            }).done();
+        });
+
+    });
 });
