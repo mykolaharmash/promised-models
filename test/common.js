@@ -438,4 +438,28 @@ describe('Calculations', function () {
         });
 
     });
+    describe('Amend', function () {
+        it('should change other fields when amending field changes', function () {
+            var model = new ModelClass();
+            return model.ready().then(function () {
+                model.set('amendingField', 'newValue');
+                expect(model.get('amendingField')).to.be.equal('newValue');
+                expect(model.get('amendedField')).to.be.equal('defaultValue');
+                return model.ready().then(function () {
+                    expect(model.get('amendedField')).to.be.equal('newValue');
+                });
+            });
+        });
+        it('should trigger change with final data', function (done) {
+            var model = new ModelClass();
+            model.ready().then(function () {
+                model.on('change', function () {
+                    expect(model.get('amendingField')).to.be.equal('newValue');
+                    expect(model.get('amendedField')).to.be.equal('newValue');
+                    done();
+                });
+                model.set('amendingField', 'newValue');
+            }).done();
+        });
+    });
 });
