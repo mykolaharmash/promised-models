@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     Vow = require('vow');
 
-describe('Models create', function () {
+describe('Create', function () {
     describe('with init data', function () {
         var ModelClass = require('./models/simple'),
             model = new ModelClass({
@@ -13,7 +13,7 @@ describe('Models create', function () {
     });
 });
 
-describe('Models.inherit', function () {
+describe('Inherit', function () {
     var ModelClass = require('./models/simple'),
     InheritedClass = ModelClass.inherit({
         propB: 'propB'
@@ -43,13 +43,10 @@ describe('Models.inherit', function () {
     });
 });
 
-describe('Models.get', function () {
+describe('Get', function () {
     var ModelClass = require('./models/simple'),
         model = new ModelClass();
 
-    it('should exist', function () {
-        expect(model.get).to.be.a('function');
-    });
     it('should resturn default value', function () {
         expect(model.get('a')).to.be.equal('a');
     });
@@ -60,13 +57,10 @@ describe('Models.get', function () {
     });
 });
 
-describe('Models.set', function () {
+describe('Set', function () {
     var ModelClass = require('./models/simple'),
         model = new ModelClass();
 
-    it('should exist', function () {
-        expect(model.set).to.be.a('function');
-    });
     it('should set value', function () {
         model.set('a', 'a2');
         expect(model.get('a')).to.be.equal('a2');
@@ -85,13 +79,8 @@ describe('Models.set', function () {
     });
 });
 
-describe('Models.toJSON', function () {
+describe('toJSON', function () {
     var ModelClass = require('./models/simple');
-
-    it('should exist', function () {
-        var model = new ModelClass();
-        expect(model.toJSON).to.be.a('function');
-    });
 
     it('should return data', function () {
         var data = {
@@ -315,7 +304,7 @@ describe('Commit', function () {
     });
 });
 
-describe('Model.validate', function () {
+describe('Validate', function () {
     var ModelClass = require('./models/simple'),
         model;
     beforeEach(function () {
@@ -366,7 +355,7 @@ describe('Model.validate', function () {
     });
 });
 
-describe('Calculations', function () {
+describe('Calculate', function () {
     var ModelClass = require('./models/with-calculations');
     describe('Calculate', function () {
         it('should calculate value on init', function () {
@@ -461,5 +450,17 @@ describe('Calculations', function () {
                 model.set('amendingField', 'newValue');
             }).done();
         });
+    });
+});
+describe('Parse', function () {
+    var ModelClass = require('./models/with-calculations');
+    it('should work for set and get', function () {
+        var model = new ModelClass();
+        model.set('preprocessed', {
+            a: 'a',
+            b: 'b'
+        });
+        expect(model.get('preprocessed')).to.be.a('string');
+        expect(JSON.parse(model.get('preprocessed'))).to.have.property('b', 'b');
     });
 });
