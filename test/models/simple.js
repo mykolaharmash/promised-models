@@ -6,28 +6,28 @@ var Models = require('../../lib/promised-models'),
 
 module.exports = Models.inherit({
     fields: {
-        a: {
+        a: Models.fields.String.inherit({
             type: 'string',
             default: 'a'
-        },
+        }),
 
-        b: {
+        b: Models.fields.String.inherit({
             type: 'string'
-        },
+        }),
 
-        c: {
+        c: Models.fields.String.inherit({
             type: 'string',
             internal: true,
             default: 'c'
-        },
-        withSyncValidation: {
+        }),
+        withSyncValidation: Models.fields.String.inherit({
             type: 'string',
             default: 'validValue',
             validate: function () {
                 return this.value === 'validValue';
             }
-        },
-        withAsyncValidation: {
+        }),
+        withAsyncValidation: Models.fields.String.inherit({
             type: 'string',
             default: 'validValue',
             validate: function () {
@@ -36,7 +36,7 @@ module.exports = Models.inherit({
                     return field.value === 'validValue';
                 });
             }
-        }
+        })
     },
     propA: 'propA'
 });

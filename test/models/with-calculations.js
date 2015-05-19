@@ -6,36 +6,31 @@ var Models = require('../../lib/promised-models'),
 
 module.exports = Models.inherit({
     fields: {
-        a: {
-            type: 'string',
+        a: Models.fields.String.inherit({
             default: 'a-0'
-        },
+        }),
 
-        b: {
-            type: 'string',
+        b: Models.fields.String.inherit({
             calculate: function () {
                 return 'b-' + this.model.get('a').split('-')[1];
             }
-        },
+        }),
 
-        c: {
-            type: 'string',
+        c: Models.fields.String.inherit({
             calculate: function () {
                 return 'c-' + this.model.get('b').split('-')[1];
             }
-        },
+        }),
 
-        async: {
-            type: 'string',
+        async: Models.fields.String.inherit({
             calculate: function () {
                 return Vow.fulfill().delay(0).then(function () {
                     return 'async';
                 });
             }
-        },
+        }),
 
-        asyncDepended: {
-            type: 'string',
+        asyncDepended: Models.fields.String.inherit({
             calculate: function () {
                 var field = this;
                 return Vow.fulfill().delay(0).then(function () {
@@ -43,15 +38,13 @@ module.exports = Models.inherit({
                     return [data.a, data.b, data.c, data.async].join('-');
                 });
             }
-        },
+        }),
 
-        amendedField: {
-            type: 'string',
+        amendedField: Models.fields.String.inherit({
             default: 'defaultValue'
-        },
+        }),
 
-        amendingField: {
-            type: 'string',
+        amendingField: Models.fields.String.inherit({
             default: 'defaultValue',
             amend: function () {
                 var field = this;
@@ -59,10 +52,9 @@ module.exports = Models.inherit({
                     field.model.set('amendedField', field.get());
                 });
             }
-        },
+        }),
 
-        preprocessed: {
-            type: 'string',
+        preprocessed: Models.fields.String.inherit({
             parse: function (value) {
                 if (typeof value !== 'string') {
                     return JSON.stringify(value);
@@ -70,7 +62,7 @@ module.exports = Models.inherit({
                     return this.__base(value);
                 }
             }
-        }
+        })
     },
     propA: 'propA'
 });
