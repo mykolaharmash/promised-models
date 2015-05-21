@@ -58,5 +58,13 @@ describe('Nested models', function () {
             model.commit();
             expect(model.isChanged()).to.be.equal(false);
         });
+        it('ready should work for nested models', function () {
+            model.get('nestedAsync').set('a', 'a-1');
+            expect(model.isReady()).to.be.equal(false);
+            return model.ready().then(function () {
+                expect(model.isReady()).to.be.equal(true);
+                expect(model.get('nestedAsync').get('asyncDepended')).to.be.equal('a-1-b-1-c-1-async');
+            });
+        });
     });
 });
