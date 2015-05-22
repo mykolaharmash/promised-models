@@ -20,6 +20,10 @@ describe('Primitive field types', function () {
             expect(model.get('number')).to.be.a('number');
             expect(isNaN(model.get('number'))).to.be.equal(true);
         });
+        it('isChanged for NaN should be false', function () {
+            var model = new Model();
+            expect(model.isChanged()).to.be.equal(false);
+        });
         it('should be parsed as a number', function () {
             var model = new Model();
             model.set('number', true);

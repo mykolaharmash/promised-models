@@ -19,7 +19,8 @@ module.exports = Model.inherit({
         nested: Model.fields.Model.inherit({
             modelType: NestedModel
         }),
-        nestedAsync: Model.fields.Model(require('./with-calculations'))//,
-        // collection: Model.fields.ModelList(require('./with-calculations'))
+        nestedAsync: Model.fields.Model(require('./with-calculations')),
+        collection: Model.fields.ModelsList(require('./with-calculations')),
+        collectionWithInvalid: Model.fields.ModelsList(NestedModel)
     }
 });
