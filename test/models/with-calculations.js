@@ -1,7 +1,7 @@
 /**
  * Model with calculations
  */
-var Models = require('../../lib/promised-models'),
+var Models = require('../../lib/model'),
     Vow = require('vow');
 
 module.exports = Models.inherit({

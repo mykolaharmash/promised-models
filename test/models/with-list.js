@@ -1,7 +1,7 @@
 /**
  * Model with list
  */
-var Model = require('../../lib/promised-models'),
+var Model = require('../../lib/model'),
     Vow = require('vow');
 
 module.exports = Model.inherit({

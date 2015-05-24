@@ -1,7 +1,7 @@
 /**
  * Presistant model
  */
-var Model = require('../../lib/promised-models'),
+var Model = require('../../lib/model'),
     Vow = require('vow'),
     storage = [];
 

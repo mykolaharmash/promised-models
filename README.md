@@ -1,10 +1,11 @@
-# Promised Models (in progress)
+# Promised Models
 
-Key features:
+## Key features
 
  * field declaration
- * composed models change event support
- * amend fields to be consistent
+ * nested models and collections
+ * async calculations and validation
+ * promise based
 
 ## run tests
 

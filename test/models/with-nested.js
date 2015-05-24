@@ -1,7 +1,7 @@
 /**
  * Model with types
  */
-var Model = require('../../lib/promised-models'),
+var Model = require('../../lib/model'),
     NestedModel = Model.inherit({
         fields: {
             a: Model.fields.String,
