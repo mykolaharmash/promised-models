@@ -2,10 +2,10 @@
 
 ## Key features
 
- * field declaration
+ * promise based
+ * typed attributes
  * nested models and collections
  * async calculations and validation
- * promise based
 
 ## Install
 
