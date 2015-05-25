@@ -9,7 +9,7 @@
 
 ## Install
 
-    $npm install --save promises-models
+    $npm install --save promised-models
 
 ## Usage
 
