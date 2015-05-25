@@ -29,7 +29,7 @@
 
 ### Model sync methods
 
-####inherit `Model.inherit(properties, [classPorperties])`
+#### inherit `Model.inherit(properties, [classPorperties])`
 
 Creates you own model class by extending `Model`. You can define fields, instance/class method and properties. Inheritance is build over [inherit](https://www.npmjs.com/package/inherit).
 
@@ -51,7 +51,7 @@ var CountedModels = Model.inherit({
 });
 ```
 
-####fields `Model.fields`
+#### fields `Model.fields`
 
 Namespace for predefined types of fields. Supported types:
 
@@ -83,7 +83,7 @@ var model = new FashionModel();
 model.fields.birthDate instanceof DateField; //true
 ```
 
-####set `model.set(fieldName, value)`
+#### set `model.set(fieldName, value)`
 
 Set current value of field.
 
@@ -97,7 +97,7 @@ model.set({
 });
 ```
 
-####get `model.get(fieldName)`
+#### get `model.get(fieldName)`
 
 Get current value of field.
 
@@ -111,7 +111,7 @@ model.fields.name.get(); //Kate
 model.get('some'); //throws error as uknown field
 ```
 
-####toJSON `model.toJSON()`
+#### toJSON `model.toJSON()`
 
 Return shallow copy of model data.
 
@@ -138,7 +138,7 @@ model.toJSON(); // {fullName: 'Kate Moss'}
 model.get('name'); // Kate
 ```
 
-####isChanged `model.isChanged([branch])`
+#### isChanged `model.isChanged([branch])`
 
 Has model changed since init or last commit/save/fetch.
 
@@ -160,7 +160,7 @@ model.set('weight', 56);
 model.isChanged(); //true
 ```
 
-####commit `model.commit([branch])`
+#### commit `model.commit([branch])`
 
 Cache current model state
 
@@ -175,7 +175,7 @@ model.commit();
 model.isChanged();//false
 ```
 
-####revert `model.revert([branch])`
+#### revert `model.revert([branch])`
 
 Revert model state to last cashed one
 
@@ -202,7 +202,7 @@ model.on('change', function () {
 });
 ```
 
-####on `model.on(events, cb, [ctx])`
+#### on `model.on(events, cb, [ctx])`
 
 Add event handler for one or multiple model events.
 
@@ -218,7 +218,7 @@ model.on('change', this.changeHandler, this);
 model.on('change:weight change:name', this.changeHandler, this);
 ```
 
-####un `model.un(events, cb, [ctx])`
+#### un `model.un(events, cb, [ctx])`
 
 Unsubscribe event handler from events.
 
@@ -230,13 +230,13 @@ model.on('change:weight change:name', this.changeHandler, this);
 model.un('change:weight change:name', this.changeHandler, this);
 ```
 
-####destruct `model.destruct()`
+#### destruct `model.destruct()`
 
 Remove all events handlers from model and removes model from collections
 
 ### Model async methods
 
-####validate `model.validate()`
+#### validate `model.validate()`
 
 Validate model fields.
 
@@ -267,7 +267,7 @@ model.validate().fail(function (err) {
 }).done();
 ```
 
-####ready `model.ready()`
+#### ready `model.ready()`
 
 Fullfils when all calculations over model finished.
 
@@ -294,7 +294,7 @@ model.ready().then(function () {
 
 ```
 
-####fetch `model.fetch()`
+#### fetch `model.fetch()`
 
 Fetch data associlated with model from storage.
 
@@ -318,7 +318,7 @@ model.fetch().then(function () {
 }).done();
 ```
 
-####save `model.save()`
+#### save `model.save()`
 
 ```
 var FashionModel = Model.inherit({
@@ -350,11 +350,11 @@ model.save().then(function () { //create
 }).done()
 ```
 
-####remove `model.remove()`
+#### remove `model.remove()`
 
 Removes model from storage.
 
-###Model additional methods and properties
+### Model additional methods and properties
 
 * `model.isNew()`
 * `model.isReady()`
@@ -365,9 +365,9 @@ Removes model from storage.
 
 This methods provided for advanced model extending. Consult source for detials.
 
-###Model static methods and properties
+### Model static methods and properties
 
-####Storage `Model.Storage`
+#### Storage `Model.Storage`
 
 Abstract class for model storage
 
@@ -382,7 +382,7 @@ var FashionModel = Model.inherit({
 });
 ```
 
-####Field `Model.Field`
+#### Field `Model.Field`
 
 Base class for model field
 
@@ -392,7 +392,7 @@ var CustomField = Model.field.inherit({
 })
 ```
 
-####ValidationError `Model.ValidationError`
+#### ValidationError `Model.ValidationError`
 
 Error class for validation fail report
 
