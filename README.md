@@ -13,16 +13,19 @@
 
 ## Usage
 
-    var Model = require('promises-models'),
-        FashionModel = new Model.inherit({
-            attributes: {
-                name: Model.attributeTypes.String
-            }
-        }),
-        model = new FashionModel({
-            name: 'Kate'
-        });
-    console.log(model.get('name')); // 'Kate'
+```js
+var Model = require('promises-models'),
+    FashionModel = new Model.inherit({
+        attributes: {
+            name: Model.attributeTypes.String
+        }
+    }),
+    model = new FashionModel({
+        name: 'Kate'
+    });
+
+model.get('name'); // 'Kate'
+```
 
 
 ## Api reference (in progress)
@@ -51,7 +54,7 @@ var CountedModels = Model.inherit({
 });
 ```
 
-#### attributes `Model.attributeTypes`
+#### attributeTypes `Model.attributeTypes`
 
 Namespace for predefined types of attributes. Supported types:
 
