@@ -1,7 +1,7 @@
 {
   "description": "promise based, typed attributes, nested models and collections",
   "name": "promised-models",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "repository": "git@github.com:delfrrr/promised-models.git",
   "keywords": [
     "models",
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "eventemitter3": "1.1.0",
-    "inherit": "2.2.2"
+    "inherit": "2.2.2",
+    "vow": "0.4.9"
   }
 }
