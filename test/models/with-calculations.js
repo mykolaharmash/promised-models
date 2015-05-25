@@ -5,24 +5,24 @@ var Models = require('../../lib/model'),
     Vow = require('vow');
 
 module.exports = Models.inherit({
-    fields: {
-        a: Models.fields.String.inherit({
+    attributes: {
+        a: Models.attributeTypes.String.inherit({
             default: 'a-0'
         }),
 
-        b: Models.fields.String.inherit({
+        b: Models.attributeTypes.String.inherit({
             calculate: function () {
                 return 'b-' + this.model.get('a').split('-')[1];
             }
         }),
 
-        c: Models.fields.String.inherit({
+        c: Models.attributeTypes.String.inherit({
             calculate: function () {
                 return 'c-' + this.model.get('b').split('-')[1];
             }
         }),
 
-        async: Models.fields.String.inherit({
+        async: Models.attributeTypes.String.inherit({
             calculate: function () {
                 return Vow.fulfill().delay(0).then(function () {
                     return 'async';
@@ -30,31 +30,31 @@ module.exports = Models.inherit({
             }
         }),
 
-        asyncDepended: Models.fields.String.inherit({
+        asyncDepended: Models.attributeTypes.String.inherit({
             calculate: function () {
-                var field = this;
+                var attribute = this;
                 return Vow.fulfill().delay(0).then(function () {
-                    var data = field.model.toJSON();
+                    var data = attribute.model.toJSON();
                     return [data.a, data.b, data.c, data.async].join('-');
                 });
             }
         }),
 
-        amendedField: Models.fields.String.inherit({
+        amendedAttribute: Models.attributeTypes.String.inherit({
             default: 'defaultValue'
         }),
 
-        amendingField: Models.fields.String.inherit({
+        amendingAttribute: Models.attributeTypes.String.inherit({
             default: 'defaultValue',
             amend: function () {
-                var field = this;
+                var attribute = this;
                 return Vow.fulfill().delay(0).then(function () {
-                    field.model.set('amendedField', field.get());
+                    attribute.model.set('amendedAttribute', attribute.get());
                 });
             }
         }),
 
-        preprocessed: Models.fields.String.inherit({
+        preprocessed: Models.attributeTypes.String.inherit({
             parse: function (value) {
                 if (typeof value !== 'string') {
                     return JSON.stringify(value);

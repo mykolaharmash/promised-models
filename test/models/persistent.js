@@ -6,15 +6,15 @@ var Model = require('../../lib/model'),
     storage = [];
 
 module.exports = Model.inherit({
-    fields: {
-        a: Model.fields.String.inherit({
+    attributes: {
+        a: Model.attributeTypes.String.inherit({
             default: 'a-0'
         }),
-        b: Model.fields.String.inherit({
+        b: Model.attributeTypes.String.inherit({
             calculate: function () {
-                var field = this;
+                var attribute = this;
                 return Vow.fulfill().delay(0).then(function () {
-                    return 'b-' + field.model.get('a').split('-')[1];
+                    return 'b-' + attribute.model.get('a').split('-')[1];
                 });
             }
         })

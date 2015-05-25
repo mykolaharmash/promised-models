@@ -5,35 +5,35 @@ var Models = require('../../lib/model'),
     Vow = require('vow');
 
 module.exports = Models.inherit({
-    fields: {
-        a: Models.fields.String.inherit({
+    attributes: {
+        a: Models.attributeTypes.String.inherit({
             type: 'string',
             default: 'a'
         }),
 
-        b: Models.fields.String.inherit({
+        b: Models.attributeTypes.String.inherit({
             type: 'string'
         }),
 
-        c: Models.fields.String.inherit({
+        c: Models.attributeTypes.String.inherit({
             type: 'string',
             internal: true,
             default: 'c'
         }),
-        withSyncValidation: Models.fields.String.inherit({
+        withSyncValidation: Models.attributeTypes.String.inherit({
             type: 'string',
             default: 'validValue',
             validate: function () {
                 return this.value === 'validValue';
             }
         }),
-        withAsyncValidation: Models.fields.String.inherit({
+        withAsyncValidation: Models.attributeTypes.String.inherit({
             type: 'string',
             default: 'validValue',
             validate: function () {
-                var field = this;
+                var attribute = this;
                 return Vow.fulfill().delay(0).then(function () {
-                    return field.value === 'validValue';
+                    return attribute.value === 'validValue';
                 });
             }
         })

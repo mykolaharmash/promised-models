@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 describe('Nested models', function () {
     var Model = require('./models/with-nested');
-    describe('model field', function () {
+    describe('model attribute', function () {
         var data, model;
         beforeEach(function () {
             data = {
@@ -24,7 +24,7 @@ describe('Nested models', function () {
             });
             model.get('nested').set('a', 'a-1');
         });
-        it('should trigger change:field on parent model', function (done) {
+        it('should trigger change:attribute on parent model', function (done) {
             model.on('change:nested', function () {
                 done();
             });

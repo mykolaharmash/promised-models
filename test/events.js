@@ -16,7 +16,7 @@ describe('Events', function () {
             model.set('a', 'a1');
             model.set('b', 'b1');
         });
-        it('should bind on fields and events', function (done) {
+        it('should bind on attributes and events', function (done) {
             var model = new ModelClass(),
                 count = 0;
             model.on('a b', 'change', function () {
@@ -59,13 +59,13 @@ describe('Events', function () {
         });
 
     });
-    describe('change:field', function () {
+    describe('change:attribute', function () {
         var model, count;
         beforeEach(function () {
             model = new ModelClass();
             count = 0;
         });
-        it('should call change:field async', function (done) {
+        it('should call change:attribute async', function (done) {
             model.on('change:a', function () {
                 count++;
                 expect(model.get('a')).to.be.equal('a2');

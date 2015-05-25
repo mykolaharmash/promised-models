@@ -14,7 +14,7 @@ describe('Persistent', function () {
             });
         }).done();
     });
-    it('should insert and update calculated fields', function () {
+    it('should insert and update calculated attributes', function () {
         var model1 = new Model();
         model1.set('a', 'a-2');
         return model1.save().then(function () {

@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('List field', function () {
+describe('List attribute', function () {
     var Model = require('./models/with-list');
     it('should set array', function () {
         var arr = [1, 2, 3],

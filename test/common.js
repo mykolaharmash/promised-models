@@ -23,16 +23,16 @@ describe('Common', function () {
             it('should have inherit', function () {
                 expect(ModelClass.inherit).to.be.a('function');
             });
-            it('should have fields', function () {
+            it('should have attributes', function () {
                 var model = new ModelClass();
-                expect(model).to.have.property('fields');
+                expect(model).to.have.property('attributes');
             });
         });
 
         describe('InheritedClass', function () {
             var model = new InheritedClass();
-            it('should have fields', function () {
-                expect(model).to.have.property('fields');
+            it('should have attributes', function () {
+                expect(model).to.have.property('attributes');
             });
             it('should have propA', function () {
                 expect(model).to.have.property('propA');
@@ -50,7 +50,7 @@ describe('Common', function () {
         it('should resturn default value', function () {
             expect(model.get('a')).to.be.equal('a');
         });
-        it('should throw on unknown field', function () {
+        it('should throw on unknown attribute', function () {
             expect(function () {
                 model.get('nonexist');
             }).to.throw(Error);

@@ -15,8 +15,8 @@
 
     var Model = require('promises-models'),
         FashionModel = new Model.inherit({
-            fields: {
-                name: Model.fields.String
+            attributes: {
+                name: Model.attributeTypes.String
             }
         }),
         model = new FashionModel({
@@ -31,13 +31,13 @@
 
 #### inherit `Model.inherit(properties, [classPorperties])`
 
-Creates you own model class by extending `Model`. You can define fields, instance/class method and properties. Inheritance is build over [inherit](https://www.npmjs.com/package/inherit).
+Creates you own model class by extending `Model`. You can define attributes, instance/class method and properties. Inheritance is build over [inherit](https://www.npmjs.com/package/inherit).
 
 ```
 var CountedModels = Model.inherit({
     __constructor: function () {
         this.__base.apply(this, arguments); //super
-        this.fields.index.set(this.__self._count); //static properties
+        this.attributes.index.set(this.__self._count); //static properties
         this.__self._count ++;
     },
     getIndex: function () {
@@ -51,9 +51,9 @@ var CountedModels = Model.inherit({
 });
 ```
 
-#### fields `Model.fields`
+#### attributes `Model.attributeTypes`
 
-Namespace for predefined types of fields. Supported types:
+Namespace for predefined types of attributes. Supported types:
 
 * `String`
 * `Number`
@@ -62,44 +62,44 @@ Namespace for predefined types of fields. Supported types:
 * `Model` — for nested models
 * `ModelList` — for nested collections
 
-You can extend default field types or create your own
+You can extend default attribute types or create your own
 
 ```
-var DateField = Model.fields.Number.inherit({
+var DateAttribute = Model.attributeTypes.Number.inherit({
     //..
 }),
 FashionModel = Model.inherit({
-    fields: {
-        name: Model.fields.String,
-        birthDate: DateField
+    attributes: {
+        name: Model.attributeTypes.String,
+        birthDate: DateAttribute
     }
 });
 ```
 
-**Note:** `models.fields` will be replaced in constructor with field instances.
+**Note:** `models.attributes` will be replaced in constructor with attribute instances.
 
 ```
 var model = new FashionModel();
-model.fields.birthDate instanceof DateField; //true
+model.attributes.birthDate instanceof DateAttribute; //true
 ```
 
-#### set `model.set(fieldName, value)`
+#### set `model.set(attributeName, value)`
 
-Set current value of field.
+Set current value of attribute.
 
 ```
 var model = new FashionModel();
 model.set('name', 'Kate');
-model.fields.name.set('Kate');
+model.attributes.name.set('Kate');
 model.set({
     name: 'Kate',
     birthDate: new Date(1974, 1, 16)
 });
 ```
 
-#### get `model.get(fieldName)`
+#### get `model.get(attributeName)`
 
-Get current value of field.
+Get current value of attribute.
 
 ```
 var model = new FashionModel({
@@ -107,26 +107,26 @@ var model = new FashionModel({
     birthDate: new Date(1974, 1, 16)
 })
 model.get('name'); //Kate
-model.fields.name.get(); //Kate
-model.get('some'); //throws error as uknown field
+model.attributes.name.get(); //Kate
+model.get('some'); //throws error as uknown attribute
 ```
 
 #### toJSON `model.toJSON()`
 
 Return shallow copy of model data.
 
-**Note:** You can create internal fields, wich wouldn't be included to returned object.
+**Note:** You can create internal attributes, wich wouldn't be included to returned object.
 
 ```
 var FashionModel = new Model.inherit({
-    fields: {
-        name: Model.fields.String.inherit({
+    attributes: {
+        name: Model.attributeTypes.String.inherit({
             internal: true;
         }),
-        sename: Model.fields.String.inherit({
+        sename: Model.attributeTypes.String.inherit({
             internal: true;
         }),
-        fullName: Model.fields.String
+        fullName: Model.attributeTypes.String
     }
 }),
 model = new FashionModel({
@@ -144,9 +144,9 @@ Has model changed since init or last commit/save/fetch.
 
 ```
 var FashionModel = Model.inherit({
-        fields: {
-            name: Model.fields.String,
-            weight: Model.fields.Number.inherit({
+        attributes: {
+            name: Model.attributeTypes.String,
+            weight: Model.attributeTypes.Number.inherit({
                 default: 50
             })
         }
@@ -208,8 +208,8 @@ Add event handler for one or multiple model events.
 
 List of events:
 
-* `change` – some of fields have been changed
-* `change:fieldName` – `fieldName` have been changed
+* `change` – some of attributes have been changed
+* `change:attributeName` – `attributeName` have been changed
 * `destruct` – model was destructed
 * `calculate` – async calculations started
 
@@ -238,12 +238,12 @@ Remove all events handlers from model and removes model from collections
 
 #### validate `model.validate()`
 
-Validate model fields.
+Validate model attributes.
 
 ```
 var FashionModel = Model.inherit({
-        fields: {
-            name: Model.fields.String.inherit({
+        attributes: {
+            name: Model.attributeTypes.String.inherit({
                 validate: function () {
                     return $.get('/validateName', {
                         name: this.get()
@@ -260,7 +260,7 @@ var FashionModel = Model.inherit({
 
 model.validate().fail(function (err) {
     if (err instanceof Model.ValidationError) {
-        console.log('Invalid fields:' + err.fields.join());
+        console.log('Invalid attributes:' + err.attributes.join());
     } else {
         return err;
     }
@@ -273,16 +273,16 @@ Fullfils when all calculations over model finished.
 
 ```
 var FashionModel = Model.inherit({
-        fields: {
-            name: Model.fields.String,
-            ratingIndex: Model.fields.Number.inherit({
+        attributes: {
+            name: Model.attributeTypes.String,
+            ratingIndex: Model.attributeTypes.Number.inherit({
                 calculate: function () {
                     return $.get('/rating', {
                         annualFee: this.model.get('annualFee')
                     });
                 }
             }),
-            annualFee: Model.fields.Number
+            annualFee: Model.attributeTypes.Number
         }
     }),
     model = new FashionModel();
@@ -300,8 +300,8 @@ Fetch data associlated with model from storage.
 
 ```
 var FashionModel = Model.inherit({
-        fields: {
-            name: Model.fields.String
+        attributes: {
+            name: Model.attributeTypes.String
         },
         storage: Model.Storage.inherit({
             find: function (model) {
@@ -322,9 +322,9 @@ model.fetch().then(function () {
 
 ```
 var FashionModel = Model.inherit({
-        fields: {
-            name: Model.fields.String,
-            weight: Model.fields.Number
+        attributes: {
+            name: Model.attributeTypes.String,
+            weight: Model.attributeTypes.Number
         },
         storage: Model.Storage.inherit({
             insert: function (model) {
@@ -373,7 +373,7 @@ Abstract class for model storage
 
 ```
 var FashionModel = Model.inherit({
-    fields: {
+    attributes: {
         //..
     },
     storage: Model.Storage.inherit({
@@ -382,12 +382,12 @@ var FashionModel = Model.inherit({
 });
 ```
 
-#### Field `Model.Field`
+#### Attribute `Model.Attribute`
 
-Base class for model field
+Base class for model attribute
 
 ```
-var CustomField = Model.field.inherit({
+var CustomAttribute = Model.attribute.inherit({
     //..
 })
 ```

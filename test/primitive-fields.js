@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('Primitive field types', function () {
+describe('Primitive attribute types', function () {
     var Model = require('./models/with-types');
     describe('string', function () {
         it('should be string', function () {

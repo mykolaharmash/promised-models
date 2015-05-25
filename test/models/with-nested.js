@@ -3,10 +3,10 @@
  */
 var Model = require('../../lib/model'),
     NestedModel = Model.inherit({
-        fields: {
-            a: Model.fields.String,
-            b: Model.fields.String,
-            invalid: Model.fields.Number.inherit({
+        attributes: {
+            a: Model.attributeTypes.String,
+            b: Model.attributeTypes.String,
+            invalid: Model.attributeTypes.Number.inherit({
                 validate: function () {
                     return Boolean(this.value);
                 }
@@ -15,12 +15,12 @@ var Model = require('../../lib/model'),
     });
 
 module.exports = Model.inherit({
-    fields: {
-        nested: Model.fields.Model.inherit({
+    attributes: {
+        nested: Model.attributeTypes.Model.inherit({
             modelType: NestedModel
         }),
-        nestedAsync: Model.fields.Model(require('./with-calculations')),
-        collection: Model.fields.ModelsList(require('./with-calculations')),
-        collectionWithInvalid: Model.fields.ModelsList(NestedModel)
+        nestedAsync: Model.attributeTypes.Model(require('./with-calculations')),
+        collection: Model.attributeTypes.ModelsList(require('./with-calculations')),
+        collectionWithInvalid: Model.attributeTypes.ModelsList(NestedModel)
     }
 });
