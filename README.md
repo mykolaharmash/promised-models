@@ -36,7 +36,7 @@ model.get('name'); // 'Kate'
 
 Creates you own model class by extending `Model`. You can define attributes, instance/class method and properties. Inheritance is build over [inherit](https://www.npmjs.com/package/inherit).
 
-```
+```js
 var CountedModels = Model.inherit({
     __constructor: function () {
         this.__base.apply(this, arguments); //super
@@ -67,7 +67,7 @@ Namespace for predefined types of attributes. Supported types:
 
 You can extend default attribute types or create your own
 
-```
+```js
 var DateAttribute = Model.attributeTypes.Number.inherit({
     //..
 }),
@@ -81,7 +81,7 @@ FashionModel = Model.inherit({
 
 **Note:** `models.attributes` will be replaced in constructor with attribute instances.
 
-```
+```js
 var model = new FashionModel();
 model.attributes.birthDate instanceof DateAttribute; //true
 ```
@@ -90,7 +90,7 @@ model.attributes.birthDate instanceof DateAttribute; //true
 
 Set current value of attribute.
 
-```
+```js
 var model = new FashionModel();
 model.set('name', 'Kate');
 model.attributes.name.set('Kate');
@@ -104,7 +104,7 @@ model.set({
 
 Get current value of attribute.
 
-```
+```js
 var model = new FashionModel({
     name: 'Kate',
     birthDate: new Date(1974, 1, 16)
@@ -120,7 +120,7 @@ Return shallow copy of model data.
 
 **Note:** You can create internal attributes, wich wouldn't be included to returned object.
 
-```
+```js
 var FashionModel = new Model.inherit({
     attributes: {
         name: Model.attributeTypes.String.inherit({
@@ -145,7 +145,7 @@ model.get('name'); // Kate
 
 Has model changed since init or last commit/save/fetch.
 
-```
+```js
 var FashionModel = Model.inherit({
         attributes: {
             name: Model.attributeTypes.String,
@@ -167,7 +167,7 @@ model.isChanged(); //true
 
 Cache current model state
 
-```
+```js
 var model = new FashionModel();
 model.set({
     name: 'Kate',
@@ -182,7 +182,7 @@ model.isChanged();//false
 
 Revert model state to last cashed one
 
-```
+```js
 var model = new FashionModel({
     name: 'Kate',
     weight: 55
@@ -195,7 +195,7 @@ model.isChanged(); //false
 
 **Note:** You can create your own cache by passing branch param.
 
-```
+```js
 var RENDERED = 'RENDERED';
 model.on('change', function () {
     if (model.isChanged(RENDERED)) {
@@ -216,7 +216,7 @@ List of events:
 * `destruct` – model was destructed
 * `calculate` – async calculations started
 
-```
+```js
 model.on('change', this.changeHandler, this);
 model.on('change:weight change:name', this.changeHandler, this);
 ```
@@ -225,7 +225,7 @@ model.on('change:weight change:name', this.changeHandler, this);
 
 Unsubscribe event handler from events.
 
-```
+```js
 //sunscribe
 model.on('change:weight change:name', this.changeHandler, this);
 
@@ -243,7 +243,7 @@ Remove all events handlers from model and removes model from collections
 
 Validate model attributes.
 
-```
+```js
 var FashionModel = Model.inherit({
         attributes: {
             name: Model.attributeTypes.String.inherit({
@@ -274,7 +274,7 @@ model.validate().fail(function (err) {
 
 Fullfils when all calculations over model finished.
 
-```
+```js
 var FashionModel = Model.inherit({
         attributes: {
             name: Model.attributeTypes.String,
@@ -301,7 +301,7 @@ model.ready().then(function () {
 
 Fetch data associlated with model from storage.
 
-```
+```js
 var FashionModel = Model.inherit({
         attributes: {
             name: Model.attributeTypes.String
@@ -323,7 +323,7 @@ model.fetch().then(function () {
 
 #### save `model.save()`
 
-```
+```js
 var FashionModel = Model.inherit({
         attributes: {
             name: Model.attributeTypes.String,
@@ -374,7 +374,7 @@ This methods provided for advanced model extending. Consult source for detials.
 
 Abstract class for model storage
 
-```
+```js
 var FashionModel = Model.inherit({
     attributes: {
         //..
@@ -389,7 +389,7 @@ var FashionModel = Model.inherit({
 
 Base class for model attribute
 
-```
+```js
 var CustomAttribute = Model.attribute.inherit({
     //..
 })
