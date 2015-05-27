@@ -3,6 +3,14 @@ var expect = require('chai').expect;
 
 describe('Persistent', function () {
     var Model = require('./models/persistent');
+
+    describe('isNew', function () {
+        it('should be true after model create', function () {
+            var model = new Model();
+            expect(model.isNew()).to.be.equal(true);
+        });
+    });
+
     it('should save and fetch model by id', function (done) {
         var model1 = new Model();
         model1.set('a', 'a-2');
