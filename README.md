@@ -34,7 +34,7 @@ model.get('name'); // 'Kate'
 
 #### inherit `Model.inherit(properties, [classPorperties])`
 
-Creates you own model class by extending `Model`. You can define attributes, instance/class method and properties. Inheritance is build over [inherit](https://www.npmjs.com/package/inherit).
+Creates you own model class by extending `Model`. You can define attributes, instance/class method and properties. Inheritance is built over [inherit](https://www.npmjs.com/package/inherit).
 
 ```js
 var CountedModels = Model.inherit({
@@ -111,14 +111,14 @@ var model = new FashionModel({
 })
 model.get('name'); //Kate
 model.attributes.name.get(); //Kate
-model.get('some'); //throws error as uknown attribute
+model.get('some'); //throws error as unknown attribute
 ```
 
 #### toJSON `model.toJSON()`
 
 Return shallow copy of model data.
 
-**Note:** You can create internal attributes, wich wouldn't be included to returned object.
+**Note:** You can create internal attributes, which wouldn't be included to returned object.
 
 ```js
 var FashionModel = new Model.inherit({
@@ -272,7 +272,7 @@ model.validate().fail(function (err) {
 
 #### ready `model.ready()`
 
-Fullfils when all calculations over model finished.
+Fulfils when all calculations over model finished.
 
 ```js
 var FashionModel = Model.inherit({
@@ -299,7 +299,7 @@ model.ready().then(function () {
 
 #### fetch `model.fetch()`
 
-Fetch data associlated with model from storage.
+Fetch data associated with model from storage.
 
 ```js
 var FashionModel = Model.inherit({
@@ -366,7 +366,7 @@ Removes model from storage.
 * `model.CHANGE_BRANCH`
 * `model.CALCULATIONS_BRANCH`
 
-This methods provided for advanced model extending. Consult source for detials.
+These methods provided for advanced model extending. Consult source for details.
 
 ### Model static methods and properties
 
