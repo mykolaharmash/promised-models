@@ -1,4 +1,4 @@
-# Promised Models (in progress)
+# Promised Models
 
 ## Key features
 
@@ -226,10 +226,10 @@ model.on('change:weight change:name', this.changeHandler, this);
 Unsubscribe event handler from events.
 
 ```js
-//sunscribe
+//subscribe
 model.on('change:weight change:name', this.changeHandler, this);
 
-//unsunscribe
+//unsubscribe
 model.un('change:weight change:name', this.changeHandler, this);
 ```
 
@@ -393,6 +393,52 @@ Base class for model attribute
 var CustomAttribute = Model.attribute.inherit({
     //..
 })
+```
+
+### List
+
+Array like object returned for fields types `List` and `ModelsList`
+
+```
+var Podium = Model.inherit({
+    attributes: {
+        models: Model.attributeTypes.ModelsList(FashionModel)
+    }
+}),
+
+podium = new Podium(data),
+list = podium.get('models'), //instanceof List
+model = list.get(0); //instanceof Model
+```
+
+#### Mutating methods
+
+List inerits Array mutating methods: `pop`, `push`, `reverse`, `shift`, `sort`, `splice`, `unshift`
+
+```
+podium.get('models').push(new FashionModel());
+```
+
+#### `list.get(index)`
+
+Get list item by index
+
+```
+podium.get('models').get(0);// instanceof Model
+```
+
+#### `list.length()`
+
+Returns length of list
+
+#### `list.toArray()`
+
+Returns shallow copy of Array, wich stores List items
+
+```
+podium.get('models').forEach(function (model) {
+    model; // instanceof Model
+});
 ```
 
 #### ValidationError `Model.ValidationError`
