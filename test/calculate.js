@@ -1,5 +1,7 @@
 
-var expect = require('chai').expect;
+var expect = require('chai').expect,
+    Vow = require('vow'),
+    Model = require('../lib/model');
 
 describe('Calculate', function () {
     var ModelClass = require('./models/with-calculations');
@@ -70,6 +72,35 @@ describe('Calculate', function () {
                 });
                 model.ready().done();
             }).done();
+        });
+
+        it('should stop after iteration limit', function () {
+            var LoopedModel = Model.inherit({
+                throwCalculationErrors: false,
+                attributes: {
+                    a: Model.attributeTypes.String.inherit({
+                        default: 'a-0',
+                        isChanged: function () {
+                            return this.get() !== this.default;
+                        },
+                    }),
+                    b: Model.attributeTypes.String.inherit({
+                        calculate: function () {
+                            return this.model.get('a') + '-1';
+                        }
+                    })
+                }
+            }),
+            loopedModel = new LoopedModel();
+            return loopedModel.ready().then(function () {
+                loopedModel.set('a', 'a-1');
+                return loopedModel.ready();
+            }).always(function (p) {
+                var err = p.valueOf();
+                expect(err).instanceof(Error);
+                expect(err.message).to.contain('After 100 calculations');
+                return Vow.fulfill();
+            });
         });
 
     });
