@@ -9,6 +9,7 @@ describe('Models list', function () {
             {a: 'a-2'}
         ];
     beforeEach(function () {
+        console.log('beforeEach');
         model = new Model({
             nested: {
                 invalid: 1
@@ -147,16 +148,35 @@ describe('Models list', function () {
                 nestedModel.set('a', 'a-10');
             }).done();
         });
-        it('should not trigger event on removed model', function (done) {
+        it('should not trigger event on removed model', function () {
+            var changeCall = 0;
             model.on('change', function () {
-                done();
+                changeCall++;
+                expect(changeCall).to.be.below(2);
             });
-            var nestedModel = model.get('collection').unshift();
-            model.ready().then(function () {
+            var nestedModel = model.get('collection').shift();
+            return model.ready().then(function () {
+                expect(changeCall).to.be.equal(1);
                 nestedModel.set('a', 'a-10');
                 return nestedModel.ready();
+            });
+        });
+
+        it('should be trigered for models added through .set', function (done) {
+            var nestedModel = new NestedModel({a: 'a-3'});
+            nestedModel.ready().then(function () {
+                model.set({
+                    collection: [nestedModel]
+                });
+                return model.ready();
+            }).then(function () {
+                model.on('change', function () {
+                    done();
+                });
+                nestedModel.set('a', 'a-10');
             }).done();
         });
+
     });
 
     describe('destruct', function () {
