@@ -9,7 +9,6 @@ describe('Models list', function () {
             {a: 'a-2'}
         ];
     beforeEach(function () {
-        console.log('beforeEach');
         model = new Model({
             nested: {
                 invalid: 1
