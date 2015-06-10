@@ -125,4 +125,14 @@ describe('Commit', function () {
             });
         });
     });
+    describe('.toJSON(branch)', function () {
+        it('should get data from given branch', function () {
+            var model = new ModelClass({
+                a: 'a-1'
+            });
+            model.set('a', 'a-2');
+            expect(model.toJSON().a).to.be.equal('a-2');
+            expect(model.toJSON(model.DEFAULT_BRANCH).a).to.be.equal('a-1');
+        });
+    });
 });
