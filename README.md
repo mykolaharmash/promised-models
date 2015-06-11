@@ -63,7 +63,8 @@ Namespace for predefined types of attributes. Supported types:
 * `Boolean`
 * `List` — for storing arrays
 * `Model` — for nested models
-* `ModelList` — for nested collections
+* `ModelsList` — for nested collections
+* `Object` — serializable objects
 
 You can extend default attribute types or create your own
 
