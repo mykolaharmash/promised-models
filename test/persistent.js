@@ -1,5 +1,6 @@
 
-var expect = require('chai').expect;
+var expect = require('chai').expect,
+    Vow = require('vow');
 
 describe('Persistent', function () {
     var Model = require('../lib/model'),
@@ -42,6 +43,21 @@ describe('Persistent', function () {
             }).then(function () {
                 expect(complex.get('nestedId')).to.be.equal(model.id);
             });
+        });
+    });
+
+    describe('remove', function () {
+        it('should prevent further save', function (done) {
+            var model =  new Persistent();
+            model.save().then(function () {
+                model.remove();
+                return model.save().fail(function (err) {
+                    expect(err.message).to.have.string('destructed');
+                    return Vow.fulfill();
+                });
+            }).then(function () {
+                done();
+            }).done();
         });
     });
 
