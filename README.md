@@ -386,7 +386,7 @@ var FashionModel = Model.inherit({
 });
 ```
 
-#### Storage `Model.storage`
+#### Class storage `Model.storage`
 
 Storage class
 
@@ -408,7 +408,7 @@ var CustomAttribute = Model.attribute.inherit({
 })
 ```
 
-#### Attribute `Model.attributes`
+#### Class attributes `Model.attributes`
 
 Model class attributes
 
