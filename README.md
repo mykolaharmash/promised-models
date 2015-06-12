@@ -386,6 +386,18 @@ var FashionModel = Model.inherit({
 });
 ```
 
+#### Storage `Model.storage`
+
+Storage class
+
+```js
+var SuperModel = FashionModel.inherit({
+    storage: FashionModel.storage.inherit({ //extend storage from FashionModel
+        //..
+    })
+});
+```
+
 #### Attribute `Model.Attribute`
 
 Base class for model attribute
@@ -394,6 +406,21 @@ Base class for model attribute
 var CustomAttribute = Model.attribute.inherit({
     //..
 })
+```
+
+#### Attribute `Model.attributes`
+
+Model class attributes
+
+```js
+var SuperModel = FashionModel.inherit({
+    attributes: {
+        name: FashionModel.attributes.name,
+        weight: FashionModel.attributes.weight.inherit({
+            default: 50
+        })
+    }
+});
 ```
 
 ### List
