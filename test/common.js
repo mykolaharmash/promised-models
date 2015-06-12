@@ -4,11 +4,21 @@ describe('Common', function () {
     describe('Create', function () {
         describe('with init data', function () {
             var ModelClass = require('./models/simple'),
+                model;
+            beforeEach(function () {
                 model = new ModelClass({
                     a: 'a1'
                 });
+            });
             it('should get init values', function () {
                 expect(model.get('a')).to.be.equal('a1');
+            });
+            it('should not set undefined values', function () {
+                var model = new ModelClass({
+                    a: undefined,
+                    b: 'b-1'
+                });
+                expect(model.get('a')).to.be.equal('a');
             });
         });
     });
@@ -59,7 +69,11 @@ describe('Common', function () {
 
     describe('Set', function () {
         var ModelClass = require('./models/simple'),
+            model;
+
+        beforeEach(function () {
             model = new ModelClass();
+        });
 
         it('should set value', function () {
             model.set('a', 'a2');
@@ -76,6 +90,13 @@ describe('Common', function () {
             expect(function () {
                 model.get('unknown');
             }).to.throw(Error);
+        });
+        it('should not set undefined fields', function () {
+            model.set({
+                a: undefined,
+                b: 'b-1'
+            });
+            expect(model.get('a')).to.be.equal('a');
         });
     });
 
