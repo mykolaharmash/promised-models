@@ -218,8 +218,8 @@ List of events:
 * `calculate` – async calculations started
 
 ```js
-model.on('change', this.changeHandler, this);
-model.on('change:weight change:name', this.changeHandler, this);
+model.on('change', this.changeHandler, this)
+     .on('change:weight change:name', this.changeHandler, this);
 ```
 
 #### un `model.un(events, cb, [ctx])`

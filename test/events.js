@@ -28,6 +28,10 @@ describe('Events', function () {
             model.set('a', 'a1');
             model.set('b', 'b1');
         });
+        it('should return model instance', function () {
+            var model = new ModelClass();
+            expect(model.on('change', function () {})).to.be.equal(model);
+        });
     });
     describe('Models.un', function () {
         var model, count;
@@ -43,6 +47,10 @@ describe('Events', function () {
             };
             model.on('change', cb);
             model.set('a', 'a1');
+        });
+        it('should return model instance', function () {
+            var model = new ModelClass();
+            expect(model.un('change', function () {})).to.be.equal(model);
         });
     });
     describe('change', function () {
