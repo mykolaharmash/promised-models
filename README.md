@@ -238,6 +238,29 @@ model.un('change:weight change:name', this.changeHandler, this);
 
 Remove all events handlers from model and removes model from collections
 
+#### isSet `model.isSet(attributeName)`
+
+Returns `true` if attribute was set via constructor or set
+
+```js
+var model = new FashionModel();
+model.isSet('name'); //false
+model.set('name', 'Kate');
+model.isSet('name'); //true
+```
+
+#### unset `model.unset(attributeName)`
+
+Set attribute to default value and `model.isSet() === 'false'`
+
+```js
+var model = new FashionModel();
+model.set('name', 'Kate');
+model.unset('name');
+model.isSet('name'); //false
+model.get('name'); //empty string (default value)
+```
+
 ### Model async methods
 
 #### validate `model.validate()`

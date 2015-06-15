@@ -66,5 +66,20 @@ describe('Nested models', function () {
                 expect(model.get('nestedAsync').get('asyncDepended')).to.be.equal('a-1-b-1-c-1-async');
             });
         });
+        describe('revert', function () {
+            it('should revert nested model', function () {
+                model.get('nested').set('a', 'a-1');
+                model.revert();
+                expect(model.get('nested').get('a')).to.be.equal('a-0');
+            });
+        });
+        describe('commit', function () {
+            it('should cache model state', function () {
+                model.get('nested').set('a', 'a-1');
+                model.commit();
+                model.revert();
+                expect(model.get('nested').get('a')).to.be.equal('a-1');
+            });
+        });
     });
 });
