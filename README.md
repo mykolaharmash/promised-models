@@ -206,7 +206,7 @@ model.on('change', function () {
 });
 ```
 
-#### on `model.on(events, cb, [ctx])`
+#### on `model.on([attributes], events, cb, [ctx])`
 
 Add event handler for one or multiple model events.
 
@@ -222,13 +222,13 @@ model.on('change', this.changeHandler, this)
      .on('change:weight change:name', this.changeHandler, this);
 ```
 
-#### un `model.un(events, cb, [ctx])`
+#### un `model.un([attributes], events, cb, [ctx])`
 
 Unsubscribe event handler from events.
 
 ```js
 //subscribe
-model.on('change:weight change:name', this.changeHandler, this);
+model.on('weight name', 'change', this.changeHandler, this);
 
 //unsubscribe
 model.un('change:weight change:name', this.changeHandler, this);
