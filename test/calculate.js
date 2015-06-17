@@ -1,6 +1,6 @@
 
 var expect = require('chai').expect,
-    Vow = require('vow'),
+    fulfill = require('../lib/fulfill'),
     Model = require('../lib/model');
 
 describe('Calculate', function () {
@@ -99,7 +99,7 @@ describe('Calculate', function () {
                 var err = p.valueOf();
                 expect(err).instanceof(Error);
                 expect(err.message).to.contain('After 100 calculations');
-                return Vow.fulfill();
+                return fulfill();
             });
         });
 

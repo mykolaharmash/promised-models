@@ -2,7 +2,7 @@
  * Simple model class
  */
 var Models = require('../../lib/model'),
-    Vow = require('vow');
+    fulfill = require('../../lib/fulfill');
 
 module.exports = Models.inherit({
     attributes: {
@@ -32,7 +32,7 @@ module.exports = Models.inherit({
             default: 'validValue',
             validate: function () {
                 var attribute = this;
-                return Vow.fulfill().delay(0).then(function () {
+                return fulfill().delay(0).then(function () {
                     return attribute.value === 'validValue';
                 });
             }
