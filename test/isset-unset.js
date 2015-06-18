@@ -65,5 +65,16 @@ describe('attribute initial state', function () {
             model.unset('a');
             expect(model.isSet('a')).to.be.equal(false);
         });
+        it('should emit change', function (done) {
+            var model = new ModelClass({
+                a: 'a-1'
+            });
+            model.ready().then(function () {
+                model.on('change:a', function () {
+                    done();
+                });
+                model.unset('a');
+            }).done();
+        });
     });
 });
