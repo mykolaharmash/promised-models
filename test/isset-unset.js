@@ -77,4 +77,13 @@ describe('attribute initial state', function () {
             }).done();
         });
     });
+    describe('set', function () {
+        it('should unset when setting null', function () {
+            var model = new ModelClass({
+                a: 'a-1'
+            });
+            model.set('a', null);
+            expect(model.get('a')).to.be.equal('a');
+        });
+    });
 });

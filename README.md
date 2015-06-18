@@ -101,6 +101,8 @@ model.set({
 });
 ```
 
+**Note:** setting `null` is equivalent to call `.unset()`
+
 #### get `model.get(attributeName)`
 
 Get current value of attribute.
