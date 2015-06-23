@@ -27,6 +27,49 @@ describe('Persistent', function () {
             }
         });
 
+    describe('fetch', function () {
+        var ModelClass;
+        before(function () {
+            ModelClass = Model.inherit({
+                isNew: function () {
+                    return false;
+                },
+                attributes: {
+                    a: Model.attributeTypes.String.inherit({
+                        default: 'a'
+                    }),
+                    b: Model.attributeTypes.String.inherit({
+                        calculate: function () {
+                            if (!this.get()) {
+                                return this.model.get('a') + 'b';
+                            } else {
+                                return this.get();
+                            }
+
+                        }
+                    })
+                },
+                storage: Model.Storage.inherit({
+                    find: function (model) {
+                        return {
+                            a: model.get('a') + '-fetched',
+                            b: model.get('b') + '-fetched'
+                        };
+                    }
+                })
+            });
+        });
+        it('should run after calculations', function () {
+            var model = new ModelClass();
+            return model.fetch().then(function () {
+                expect(model.toJSON()).to.be.deep.equal({
+                    a: 'a-fetched',
+                    b: 'ab-fetched'
+                });
+            });
+        });
+    });
+
     describe('isNew', function () {
         it('should be true after model create', function () {
             var model = new Persistent();
