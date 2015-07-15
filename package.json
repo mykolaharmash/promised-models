@@ -1,7 +1,7 @@
 {
   "description": "promise based, typed attributes, nested models and collections",
   "name": "promised-models",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "repository": "git@github.com:delfrrr/promised-models.git",
   "keywords": [
     "models",
