@@ -1,4 +1,5 @@
-var expect = require('chai').expect;
+var expect = require('chai').expect,
+    Model = require('../lib/model');
 
 describe('Common', function () {
     describe('Create', function () {
@@ -116,6 +117,43 @@ describe('Common', function () {
         it('should support internal', function () {
             var model = new ModelClass();
             expect(model.toJSON()).to.have.not.property('c');
+        });
+
+        it('should return serializable value NaN', function () {
+            var ModelsWithNumbers = Model.inherit({
+                attributes: {
+                    n: Model.attributeTypes.Number
+                }
+            }),
+            model1 = new ModelsWithNumbers(),
+            model2 = new ModelsWithNumbers(
+                JSON.parse(
+                    JSON.stringify(
+                        model1.toJSON()
+                    )
+                )
+            );
+
+            expect(isNaN(model2.get('n'))).to.be.equal(true);
+        });
+        it('should return serializable value Infinity', function () {
+            var ModelsWithNumbers = Model.inherit({
+                attributes: {
+                    n: Model.attributeTypes.Number
+                }
+            }),
+            model1 = new ModelsWithNumbers({
+                n: -Infinity
+            }),
+            model2 = new ModelsWithNumbers(
+                JSON.parse(
+                    JSON.stringify(
+                        model1.toJSON()
+                    )
+                )
+            );
+
+            expect(model2.get('n')).to.be.equal(-Infinity);
         });
     });
 

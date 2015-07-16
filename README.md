@@ -144,6 +144,13 @@ model.toJSON(); // {fullName: 'Kate Moss'}
 model.get('name'); // Kate
 ```
 
+**Note:** Returned object supposed to be serializable via `JSON.parse()`. Due to this reason `NaN` and `Infinity` are serialized in this way:
+
+```
+NaN -> null
+Infinity -> 'Infinity'
+```
+
 #### isChanged `model.isChanged([branch])`
 
 Has model changed since init or last commit/save/fetch.
