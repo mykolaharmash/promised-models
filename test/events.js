@@ -3,7 +3,31 @@ var expect = require('chai').expect;
 
 describe('Events', function () {
     var ModelClass = require('./models/simple');
-    describe('Models.on', function () {
+
+    describe('Model.un', function () {
+        it('should unsubscribe from event', function (done) {
+            var model = new ModelClass(),
+                cb = function () {
+                    model.un('change', cb);
+                    model.set('a', 'a2');
+                    done();
+                };
+            model.on('change', cb);
+            model.set('a', 'a1');
+        });
+    });
+    describe('Model.un', function () {
+        it('should bind on events', function (done) {
+            var model = new ModelClass(),
+                cb = function () {
+                    ModelClass.un('change', cb);
+                    done();
+                };
+            ModelClass.on('change', cb);
+            model.set('a', 'a1');
+        });
+    });
+    describe('model.on', function () {
         it('should bind on few events', function (done) {
             var model = new ModelClass(),
                 count = 0;
@@ -33,7 +57,7 @@ describe('Events', function () {
             expect(model.on('change', function () {})).to.be.equal(model);
         });
     });
-    describe('Models.un', function () {
+    describe('model.un', function () {
         var model, count;
         beforeEach(function () {
             model = new ModelClass();

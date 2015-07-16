@@ -455,6 +455,19 @@ var SuperModel = FashionModel.inherit({
 });
 ```
 
+#### `Model.on([attributes], events, cb, [ctx])`
+
+Bind event on all models of class
+
+```js
+FashionModel.on('change', this.changeHandler, this);
+```
+
+
+#### `Model.un([attributes], events, cb, [ctx])`
+
+Unbind event on all models of class
+
 ### List
 
 Array like object returned for fields types `List` and `ModelsList`
