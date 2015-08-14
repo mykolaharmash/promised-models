@@ -26,6 +26,10 @@ describe('attribute initial state', function () {
             var model = new ModelClass();
             expect(model.isSet('a')).to.be.equal(false);
         });
+        it('should be false if attribute was initialized with null value', function () {
+            var model = new ModelClass({a: null});
+            expect(model.isSet('a')).to.be.equal(false);
+        });
         it('should be true if attribute was set when inited', function () {
             var model = new ModelClass({
                 a: 'a'
