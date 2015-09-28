@@ -11,7 +11,7 @@ describe('Persistent', function () {
                 collection: Model.attributeTypes.ModelsList(Persistent),
                 nestedId: Model.attributeTypes.Number.inherit({
                     calculate: function () {
-                        return this.model.get('nested').id;
+                        return this.model.get('nested').getId();
                     }
                 }),
                 collectionIds: Model.attributeTypes.List.inherit({
@@ -20,7 +20,7 @@ describe('Persistent', function () {
                     },
                     calculate: function () {
                         return this.model.get('collection').toArray().map(function (model) {
-                            return model.id;
+                            return model.getId();
                         });
                     }
                 })
@@ -63,6 +63,7 @@ describe('Persistent', function () {
             var model = new ModelClass();
             return model.fetch().then(function () {
                 expect(model.toJSON()).to.be.deep.equal({
+                    id: null,
                     a: 'a-fetched',
                     b: 'ab-fetched'
                 });
@@ -84,7 +85,7 @@ describe('Persistent', function () {
             return model.save().then(function () {
                 return complex.ready();
             }).then(function () {
-                expect(complex.get('nestedId')).to.be.equal(model.id);
+                expect(complex.get('nestedId')).to.be.equal(model.getId());
             });
         });
     });
@@ -114,7 +115,7 @@ describe('Persistent', function () {
             return model.save().then(function () {
                 return complex.ready();
             }).then(function () {
-                expect(complex.get('collectionIds').get(0)).to.be.equal(model.id);
+                expect(complex.get('collectionIds').get(0)).to.be.equal(model.getId());
             });
         });
     });
@@ -123,7 +124,7 @@ describe('Persistent', function () {
         var model1 = new Persistent();
         model1.set('a', 'a-2');
         model1.save().then(function () {
-            var model2 = new Persistent(model1.id);
+            var model2 = new Persistent(model1.getId());
             return model2.fetch().then(function () {
                 expect(model2.get('a')).to.be.equal('a-2');
                 done();
@@ -134,20 +135,20 @@ describe('Persistent', function () {
         var model1 = new Persistent();
         model1.set('a', 'a-2');
         return model1.save().then(function () {
-            expect(Persistent.testStorage[model1.id]).to.have.property('a', 'a-2');
-            expect(Persistent.testStorage[model1.id]).to.have.property('b', 'b-2');
+            expect(Persistent.testStorage[model1.getId()]).to.have.property('a', 'a-2');
+            expect(Persistent.testStorage[model1.getId()]).to.have.property('b', 'b-2');
             model1.set('a', 'a-3');
             return model1.save();
         }).then(function () {
-            expect(Persistent.testStorage[model1.id]).to.have.property('a', 'a-3');
-            expect(Persistent.testStorage[model1.id]).to.have.property('b', 'b-3');
+            expect(Persistent.testStorage[model1.getId()]).to.have.property('a', 'a-3');
+            expect(Persistent.testStorage[model1.getId()]).to.have.property('b', 'b-3');
         });
     });
     it('should update', function (done) {
         var model1 = new Persistent();
         model1.set('a', 'a-1');
         model1.save().then(function () {
-            var model2 = new Persistent(model1.id);
+            var model2 = new Persistent(model1.getId());
             return model2.fetch().then(function () {
                 expect(model2.get('a')).to.be.equal('a-1');
                 model2.set('a', 'a-2');
@@ -166,7 +167,7 @@ describe('Persistent', function () {
         });
         expect(model1.get('a')).to.be.equal('a-3');
         model1.save().then(function () {
-            var id = model1.id;
+            var id = model1.getId();
             return model1.remove().then(function () {
                 var model2 = new Persistent(id);
                 return model2.fetch().fail(function () {

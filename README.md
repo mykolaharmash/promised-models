@@ -58,6 +58,7 @@ var CountedModels = Model.inherit({
 
 Namespace for predefined types of attributes. Supported types:
 
+* `Id` - for entity id
 * `String`
 * `Number`
 * `Boolean`
@@ -124,7 +125,7 @@ Return shallow copy of model data.
 **Note:** You can create internal attributes, which wouldn't be included to returned object.
 
 ```js
-var FashionModel = new Model.inherit({
+var FashionModel = Model.inherit({
     attributes: {
         name: Model.attributeTypes.String.inherit({
             internal: true;
@@ -136,11 +137,12 @@ var FashionModel = new Model.inherit({
     }
 }),
 model = new FashionModel({
+    id: 1,
     name: 'Kate',
-    sename: 'Moss',
+    surname: 'Moss',
     fullName: 'Kate Moss'
 });
-model.toJSON(); // {fullName: 'Kate Moss'}
+model.toJSON(); // {id: 1, fullName: 'Kate Moss'}
 model.get('name'); // Kate
 ```
 
@@ -150,6 +152,54 @@ model.get('name'); // Kate
 NaN -> null
 Infinity -> 'Infinity'
 ```
+
+#### getId `model.getId()`
+
+Returns entity id. You can declare special id attribute, which will be interpreted as entity id. If id attribute didn't declared, by default model will add declaration with name `id`
+
+```js
+var FashionModel = Model.inherit({
+    attributes: {
+        myId: Model.attributeTypes.Id,
+        name: Model.attributeTypes.String    
+    }
+});
+
+var model = new FashionModel({
+    myId: 1,
+    name: 'Kate'
+}); 
+model.getId() // 1
+
+FashionModel = Model.inherit({
+    attributes: {
+        id: Model.attributeTypes.Id.inherit({
+            type: String
+        }),
+        name: Model.attributeTypes.String    
+    }
+});
+
+model = new FashionModel({
+    id: 1,
+    name: 'Kate'
+}); 
+model.getId() // '1'
+
+
+FashionModel = Model.inherit({
+    attributes: {
+        name: Model.attributeTypes.String    
+    }
+});
+
+var model = new FashionModel({
+    id: 1,
+    name: 'Kate'
+}); 
+model.getId() // 1
+
+ ```
 
 #### isChanged `model.isChanged([branch])`
 
@@ -350,12 +400,12 @@ var FashionModel = Model.inherit({
         storage: Model.Storage.inherit({
             find: function (model) {
                 return $.get('/models', {
-                    id: model.id
+                    id: model.getId()
                 });
             }
         })
     }),
-    model = new FashionModel(id);
+    model = new FashionModel({id: id});
 
 model.fetch().then(function () {
     model.get('name');
@@ -388,7 +438,7 @@ model.set({
     weight: 55
 });
 model.save().then(function () { //create
-    model.id; //storage id
+    model.getId(); //storage id
     model.set('weight', 56);
     return model.save(); //update
 }).done()
