@@ -65,6 +65,7 @@ Namespace for predefined types of attributes. Supported types:
 * `List` — for storing arrays
 * `Model` — for nested models
 * `ModelsList` — for nested collections
+* `Collection` - another implementation of collections 
 * `Object` — serializable objects
 
 You can extend default attribute types or create your own
@@ -579,6 +580,97 @@ podium.get('models').forEach(function (model) {
 #### ValidationError `Model.ValidationError`
 
 Error class for validation fail report
+
+### Collection
+
+#### inherit `Collection.inherit(properties, [classPorperties])`
+
+Creates you own collection class by extending Collection. You should define `modelType` property - constructor which will be used for new models.
+
+```js
+var MyCollection = Collection.inherit({
+    modelType: MyModel
+});
+```
+
+#### length `collection.length`
+
+Number of models in collection.
+
+#### at `collection.at(index)`
+
+Returns model by index.
+
+#### get `collection.get(id)`
+
+Returns model by id.
+
+#### where `collection.where(conditions)`
+
+Returns models that match the conditions.
+
+```js
+var collection = new MyCollection([{
+    name: 'John',
+    age: 40
+}, {
+    name: 'Bob',
+    age: 40
+},{
+    name: 'Jane'
+    age: 42
+}]);
+
+collection.where({age: 40}) // -> [Model.<{name: 'John', age: 40}>, Model.<{name: 'Bob', age: 40}>]
+```
+
+#### findWhere `collection.findWhere(conditions)`
+
+Same as `where` but returns first match.
+
+#### pluck `collection.pluck(attr)`
+
+Picks one attribute from each model in collection and return array of these attributes.
+
+```js
+var collection = new MyCollection([{
+    name: 'John',
+    age: 40
+}, {
+    name: 'Bob',
+    age: 40
+},{
+    name: 'Jane'
+    age: 42
+}]);
+
+collection.pluck('name') // -> ['John', 'Bob', 'Jane']
+```
+
+#### add `collection.add(models, [options])`
+
+Adds new model(s) to collection. `models` can be an object or instance of `Model` or array of objects or models. Triggers `add` event.
+
+##### `options` 
+* `options.at` - position where model(s) should be inserted. By default model adds to end of colleciton
+ 
+#### remove `collection.remove(models)`
+
+Removes models from collection. `models` can be an instance of `Model` or array of models. Triggers `remove` event.
+  
+**Note:** When model removes via `model.remove()` it will be removed from collection
+
+#### set `collection.set(models)`
+
+Removes all models in collection and adds new `models`
+
+#### Other methods
+
+Collection implements some array methods: `forEach`, `some`, `every`, `filter`, `map`, `reduce`, `find`.
+Also collection proxies methods to models: `isChanged`, `commit`, `revert`, `toJSON`.
+
+#### Model events
+All model events such as `change`, `change:attribute`, `calculate`, `commit`, `commit:attribute` also wil be triggered on collection
 
 ## run tests
 
