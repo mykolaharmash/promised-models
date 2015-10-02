@@ -62,6 +62,17 @@ describe('Commit', function () {
                 expect(model.get('a')).to.be.equal('a2');
             });
         });
+        describe('Models.getLastCommitted', function () {
+            var model;
+            beforeEach(function () {
+                model = new ModelClass();
+            });
+            it('should return last committed value', function () {
+                var data = model.toJSON();
+                model.set('a', 'a1');
+                expect(model.getLastCommitted()).to.be.deep.equal(data);
+            });
+        });
     });
 
     describe('custom branch', function () {

@@ -215,6 +215,10 @@ model.on('change', function () {
 });
 ```
 
+#### getLastCommitted `model.getLastCommitted([branch])`
+
+Returns model last cached state.
+
 #### on `model.on([attributes], events, cb, [ctx])`
 
 Add event handler for one or multiple model events.
@@ -223,6 +227,10 @@ List of events:
 
 * `change` – some of attributes have been changed
 * `change:attributeName` – `attributeName` have been changed
+* `commit` - some of attributes have been committed to default branch
+* `branch:commit` - some of attributes have been committed to branch `branch`
+* `commit:attributeName` - `attributeName` have been committed to default branch
+* `branch:commit:attributeName` - `attributeName` have been committed to branch `branch`
 * `destruct` – model was destructed
 * `calculate` – async calculations started
 
