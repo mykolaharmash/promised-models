@@ -24,7 +24,7 @@ module.exports = Models.inherit({
             type: 'string',
             default: 'validValue',
             validate: function () {
-                return this.value === 'validValue';
+                return this.value === 'validValue' ? true : new Models.ValidationAttributeError(this, 'error');
             }
         }),
         withAsyncValidation: Models.attributeTypes.String.inherit({
@@ -33,7 +33,7 @@ module.exports = Models.inherit({
             validate: function () {
                 var attribute = this;
                 return fulfill().delay(0).then(function () {
-                    return attribute.value === 'validValue';
+                    return attribute.value === 'validValue' ? true : new Models.ValidationAttributeError(this, 'error');
                 });
             }
         })

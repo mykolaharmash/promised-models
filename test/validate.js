@@ -40,14 +40,18 @@ describe('Validate', function () {
             withSyncValidation: 'notValid'
         });
         return model.validate().always(function (p) {
+            var error;
             if (p.isFullfiled) {
                 return Vow.reject();
             } else {
-                expect(p.valueOf()).to.be.instanceOf(Error);
-                expect(p.valueOf()).to.be.instanceOf(ModelClass.ValidationError);
-                expect(p.valueOf()).to.have.property('attributes');
-                expect(p.valueOf()).to.have.deep.property('attributes[0].name');
-                expect(p.valueOf()).to.have.deep.property('attributes[1].name');
+                error = p.valueOf();
+                expect(error).to.be.instanceOf(Error);
+                expect(error).to.be.instanceOf(ModelClass.ValidationError);
+                expect(error).to.have.property('attributes');
+                expect(error).to.have.deep.property('attributes[0].name');
+                expect(error).to.have.deep.property('attributes[1].name');
+                expect(error.attributes[0]).to.be.instanceOf(ModelClass.ValidationAttributeError);
+                expect(error.attributes[0].type).to.be.equal('error');
             }
         });
     });
