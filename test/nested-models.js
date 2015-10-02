@@ -8,6 +8,7 @@ describe('Nested models', function () {
         beforeEach(function () {
             data = {
                 nested: {
+                    id: null,
                     a: 'a-0',
                     b: 'b-0',
                     invalid: 0

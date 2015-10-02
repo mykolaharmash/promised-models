@@ -55,6 +55,7 @@ describe('List attribute', function () {
                 list: arr
             });
         expect(model.toJSON()).to.deep.equal({
+            id: null,
             list: arr
         });
     });
