@@ -55,7 +55,7 @@ module.exports = Models.inherit({
         }),
 
         preprocessed: Models.attributeTypes.String.inherit({
-            toAttributeValue: function (value) {
+            _toAttributeValue: function (value) {
                 if (typeof value !== 'string') {
                     return JSON.stringify(value);
                 } else {
