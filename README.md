@@ -269,6 +269,10 @@ model.on('change', function () {
 
 Returns model last cached state.
 
+#### previous `model.previous([attr])`
+
+Returns attribute `attr` previous value or model previous state if called without arguments.  
+
 #### on `model.on([attributes], events, cb, [ctx])`
 
 Add event handler for one or multiple model events.
