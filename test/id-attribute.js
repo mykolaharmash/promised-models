@@ -42,7 +42,7 @@ describe('Id attribute', function () {
             ModelClass = Model.inherit({
                 attributes: {
                     customId: Model.attributeTypes.Id.inherit({
-                        type: String
+                        dataType: String
                     })
                 }
             });

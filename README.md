@@ -174,7 +174,7 @@ model.getId() // 1
 FashionModel = Model.inherit({
     attributes: {
         id: Model.attributeTypes.Id.inherit({
-            type: String
+            dataType: String
         }),
         name: Model.attributeTypes.String    
     }
