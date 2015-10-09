@@ -1,5 +1,5 @@
-# Promised Models
-
+Promised Models [![Build Status](https://travis-ci.org/bem-node/promised-models.svg?branch=master)](https://travis-ci.org/bem-node/promised-models)
+===
 ## Key features
 
  * promise based
