@@ -1,4 +1,4 @@
-Promised Models [![Build Status](https://travis-ci.org/bem-node/promised-models.svg?branch=master)](https://travis-ci.org/bem-node/promised-models)
+Promised Models 2 [![Build Status](https://travis-ci.org/bem-node/promised-models.svg?branch=master)](https://travis-ci.org/bem-node/promised-models)
 ===
 ## Key features
 
@@ -9,7 +9,7 @@ Promised Models [![Build Status](https://travis-ci.org/bem-node/promised-models.
 
 ## Install
 
-    $npm install --save promised-models
+    $npm install --save promised-models2
 
 ## Usage
 
