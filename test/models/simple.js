@@ -2,6 +2,8 @@
  * Simple model class
  */
 var Models = require('../../lib/model'),
+    Attribute = require('../../lib/attribute'),
+    Vow = require('vow'),
     fulfill = require('../../lib/fulfill');
 
 module.exports = Models.inherit({
@@ -23,18 +25,33 @@ module.exports = Models.inherit({
         withSyncValidation: Models.attributeTypes.String.inherit({
             type: 'string',
             default: 'validValue',
-            validate: function () {
-                return this.value === 'validValue' ? true : new Models.ValidationAttributeError(this, 'error');
+            getValidationError: function () {
+                return this.value !== 'validValue';
+            }
+        }),
+        withSyncValidationMessage: Models.attributeTypes.String.inherit({
+            type: 'string',
+            default: 'validValue',
+            getValidationError: function () {
+                return this.value !== 'validValue' && 'invalid';
+            }
+        }),
+        withSyncValidationData: Models.attributeTypes.String.inherit({
+            type: 'string',
+            default: 'validValue',
+            getValidationError: function () {
+                return this.value !== 'validValue' && {data: 'data'};
             }
         }),
         withAsyncValidation: Models.attributeTypes.String.inherit({
             type: 'string',
             default: 'validValue',
             validate: function () {
-                var attribute = this;
                 return fulfill().delay(0).then(function () {
-                    return attribute.value === 'validValue' ? true : new Models.ValidationAttributeError(this, 'error');
-                });
+                    if (this.value !== 'validValue') {
+                        return Vow.reject('Invalid');
+                    }
+                }.bind(this));
             }
         })
     },
