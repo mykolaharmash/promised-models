@@ -1,4 +1,3 @@
-
 var expect = require('chai').expect,
     Vow = require('vow');
 
@@ -35,6 +34,7 @@ describe('Persistent', function () {
                     return false;
                 },
                 attributes: {
+                    id: Model.attributeTypes.Id,
                     a: Model.attributeTypes.String.inherit({
                         default: 'a'
                     }),

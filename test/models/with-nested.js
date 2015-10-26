@@ -5,6 +5,7 @@ var Model = require('../../lib/model'),
     Attribute = require('../../lib/attribute'),
     NestedModel = Model.inherit({
         attributes: {
+            id: Model.attributeTypes.Id,
             a: Model.attributeTypes.String,
             b: Model.attributeTypes.String,
             invalid: Model.attributeTypes.Number.inherit({

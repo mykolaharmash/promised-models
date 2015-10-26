@@ -7,6 +7,7 @@ var Model = require('../../lib/model'),
 
 module.exports = Model.inherit({
     attributes: {
+        id: Model.attributeTypes.Id,
         a: Model.attributeTypes.String.inherit({
             default: 'a-0'
         }),

@@ -1,18 +1,15 @@
 var expect = require('chai').expect,
-    Model = require('../lib/model');
+    Model = require('../lib/model'),
+    TestModel = Model.inherit({attributes: {
+        id:  Model.attributeTypes.Id
+    }});
 
 describe('Id attribute', function () {
 
     describe('Default id attribute', function () {
 
-        it('should add id attribute if it absent in attributes declaration', function () {
-            var model = new Model();
-            expect(model.attributes.id).to.be.an.instanceof(Model.attributeTypes.Id);
-            expect(model.getId()).to.be.null;
-        });
-
         it('should get "id" property as id attribute from  initial data', function () {
-            var model = new Model({
+            var model = new TestModel({
                 id: 1
             });
             expect(model.getId()).to.equal(1);
@@ -57,12 +54,12 @@ describe('Id attribute', function () {
 
     describe('Id#isEqual', function () {
         it('should correctly check equality with null', function () {
-            var model = new Model();
+            var model = new TestModel();
             expect(model.attributes.id.isEqual(null)).to.be.true;
         });
 
         it('should correctly check equality with non-null', function () {
-            var model = new Model({
+            var model = new TestModel({
                 id: 1
             });
 
@@ -74,17 +71,17 @@ describe('Id attribute', function () {
     describe('Legacy', function () {
 
         it('should support old interface', function () {
-            var model = new Model(1);
+            var model = new TestModel(1);
             expect(model.getId()).to.equal(1);
 
-            model = new Model({
+            model = new TestModel({
                 id: 1
             });
             expect(model.id).to.equal(1);
         });
 
         it('should change id property when id attribute has changed', function () {
-            var model = new Model(1);
+            var model = new TestModel(1);
             model.set('id', 2);
             model.ready().then(function () {
                 expect(model.id).to.equal(2);

@@ -6,6 +6,7 @@ describe('Previous', function () {
 
     ModelClass = Model.inherit({
         attributes: {
+            id: Model.attributeTypes.Id,
             a: Model.attributeTypes.String
         }
     });

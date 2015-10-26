@@ -24,6 +24,7 @@ describe('Inherit', function () {
         });
         ModelClass2 = ModelClass1.inherit({
             attributes: {
+                id: Model.attributeTypes.Id,
                 b: ModelClass1.attributes.b,
                 c: Model.attributeTypes.String.inherit({
                     default: 'c'
@@ -52,9 +53,9 @@ describe('Inherit', function () {
         var model2 = new ModelClass2();
         return model2.fetch().then(function () {
             expect(model2.toJSON()).to.be.deep.equal({
-                id: null,
                 b: 'b-1',
-                c: 'c-1'
+                c: 'c-1',
+                id: null
             });
         });
     });

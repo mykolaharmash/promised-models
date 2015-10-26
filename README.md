@@ -156,7 +156,7 @@ Infinity -> 'Infinity'
 
 #### getId `model.getId()`
 
-Returns entity id. You can declare special id attribute, which will be interpreted as entity id. If id attribute didn't declared, by default model will add declaration with name `id`
+Returns entity id. You can declare special id attribute, which will be interpreted as entity id. If id attribute is not declared, getId returns null
 
 ```js
 var FashionModel = Model.inherit({
@@ -451,6 +451,7 @@ model.fetch().then(function () {
 ```js
 var FashionModel = Model.inherit({
         attributes: {
+            id: Model.attributeTypes.Id,
             name: Model.attributeTypes.String,
             weight: Model.attributeTypes.Number
         },
@@ -614,7 +615,7 @@ Error class for validation fail report
 
 #### inherit `Collection.inherit(properties, [classPorperties])`
 
-Creates you own collection class by extending Collection. You should define `modelType` property - constructor which will be used for new models.
+Creates you own collection class by extending Collection. You should define `modelType` property - constructor which will be used for new models. Models that are used in collections should have declared id attribute, to make getId and related methods to work correctly.
 
 ```js
 var MyCollection = Collection.inherit({
