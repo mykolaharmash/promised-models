@@ -347,9 +347,7 @@ var FashionModel = Model.inherit({
                     return $.get('/validateName', {
                         name: this.get()
                     }).then(function () {
-                        return true; //valid
-                    }, function () {
-                        return false; //invalid
+                        Vow.reject('Value is Invalid!');
                     });
                 }
             })
@@ -359,11 +357,42 @@ var FashionModel = Model.inherit({
 
 model.validate().fail(function (err) {
     if (err instanceof Model.ValidationError) {
-        console.log('Invalid attributes:' + err.attributes.join());
+        console.log('Invalid attributes:');
+        err.attributes.forEach(function (attrErr) {
+            console.log('Attribute "' + attrErr.attribute.name + '" error:', attrError);
+        });
     } else {
         return err;
     }
 }).done();
+```
+
+Fulfilled attribute validation promise means that attribute is valid, otherwise it's not. `Model.ValidationError#attributes` is array of attributes errors (`Attribute.ValidationError`).
+
+**Note:** For `Model` and `Collection` attributes `validation` method is already defined. It validates nested entity and if it's not returns promise rejected with specific error contains nested errors.
+
+If `validate` returns promise rejected with `String` this string will be used as message for `Attribute.ValidationError`. If with something else (besides `Boolean`) - rejected value will be available in `Attribute.ValidationError#data`. 
+ 
+If attribute can be validated synchronously, you can define `getValidationError` method. If it returns non-falsy value, validation promise will be rejected with returned value.
+  
+```js
+var FashionModel = Model.inherit({
+        attributes: {
+            name: Model.attributeTypes.String.inherit({
+                getValidationError: function () {
+                    if (this.get() !== 'validValue') {
+                        return 'Value is Invalid!';
+                    }
+                }
+            })
+        }
+    }),
+    model = new FashionModel();
+    
+model.validate().fail(function (err) {
+    console.log(err.attributes[0]);
+});
+
 ```
 
 #### ready `model.ready()`
