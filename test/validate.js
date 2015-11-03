@@ -55,6 +55,7 @@ describe('Validate', function () {
                 expect(error).to.have.deep.property('attributes[0].name');
                 expect(error).to.have.deep.property('attributes[1].name');
                 expect(error.attributes[0]).to.be.instanceOf(Attribute.ValidationError);
+                expect(error.attributes[0].attribute).to.be.instanceOf(Attribute);
             }
         });
     });
@@ -118,6 +119,7 @@ describe('Validate', function () {
                     expect(error).to.be.instanceOf(Error);
                     expect(error).to.be.instanceOf(ModelClass.ValidationError);
                     expect(error.attributes[0]).to.be.instanceOf(ModelAttribute.ValidationError);
+                    expect(error.attributes[0].attribute).to.be.instanceOf(Attribute);
                     expect(error.attributes[0].modelError).to.be.instanceOf(ModelClass.ValidationError);
                 }
             });
@@ -141,6 +143,7 @@ describe('Validate', function () {
                     expect(error).to.be.instanceOf(Error);
                     expect(error).to.be.instanceOf(ModelClass.ValidationError);
                     expect(error.attributes[0]).to.be.instanceOf(CollectionAttribute.ValidationError);
+                    expect(error.attributes[0].attribute).to.be.instanceOf(Attribute);
                     expect(error.attributes[0].modelsErrors).to.be.an('array');
                     expect(error.attributes[0].modelsErrors.length).to.be.equal(2);
                     expect(error.attributes[0].modelsErrors[0]).to.be.instanceOf(ModelClass.ValidationError);
