@@ -1,7 +1,7 @@
 {
   "description": "promise based, typed attributes, nested models and collections",
   "name": "promised-models2",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "repository": "git@github.com:bem-node/promised-models.git",
   "keywords": [
     "models",
