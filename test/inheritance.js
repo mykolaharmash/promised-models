@@ -52,6 +52,7 @@ describe('Inherit', function () {
         var model2 = new ModelClass2();
         return model2.fetch().then(function () {
             expect(model2.toJSON()).to.be.deep.equal({
+                id: null,
                 b: 'b-1',
                 c: 'c-1'
             });
