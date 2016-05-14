@@ -1,5 +1,5 @@
-# Promised Models
-
+Promised Models 2 [![Build Status](https://travis-ci.org/bem-node/promised-models.svg?branch=master)](https://travis-ci.org/bem-node/promised-models)
+===
 ## Key features
 
  * promise based
@@ -9,7 +9,7 @@
 
 ## Install
 
-    $npm install --save promised-models
+    $npm install --save promised-models2
 
 ## Usage
 
@@ -58,12 +58,14 @@ var CountedModels = Model.inherit({
 
 Namespace for predefined types of attributes. Supported types:
 
+* `Id` - for entity id
 * `String`
 * `Number`
 * `Boolean`
 * `List` — for storing arrays
 * `Model` — for nested models
 * `ModelsList` — for nested collections
+* `Collection` - another implementation of collections 
 * `Object` — serializable objects
 
 You can extend default attribute types or create your own
@@ -124,7 +126,7 @@ Return shallow copy of model data.
 **Note:** You can create internal attributes, which wouldn't be included to returned object.
 
 ```js
-var FashionModel = new Model.inherit({
+var FashionModel = Model.inherit({
     attributes: {
         name: Model.attributeTypes.String.inherit({
             internal: true;
@@ -136,11 +138,12 @@ var FashionModel = new Model.inherit({
     }
 }),
 model = new FashionModel({
+    id: 1,
     name: 'Kate',
-    sename: 'Moss',
+    surname: 'Moss',
     fullName: 'Kate Moss'
 });
-model.toJSON(); // {fullName: 'Kate Moss'}
+model.toJSON(); // {id: 1, fullName: 'Kate Moss'}
 model.get('name'); // Kate
 ```
 
@@ -150,6 +153,54 @@ model.get('name'); // Kate
 NaN -> null
 Infinity -> 'Infinity'
 ```
+
+#### getId `model.getId()`
+
+Returns entity id. You can declare special id attribute, which will be interpreted as entity id. If id attribute is not declared, getId returns null
+
+```js
+var FashionModel = Model.inherit({
+    attributes: {
+        myId: Model.attributeTypes.Id,
+        name: Model.attributeTypes.String    
+    }
+});
+
+var model = new FashionModel({
+    myId: 1,
+    name: 'Kate'
+}); 
+model.getId() // 1
+
+FashionModel = Model.inherit({
+    attributes: {
+        id: Model.attributeTypes.Id.inherit({
+            dataType: String
+        }),
+        name: Model.attributeTypes.String    
+    }
+});
+
+model = new FashionModel({
+    id: 1,
+    name: 'Kate'
+}); 
+model.getId() // '1'
+
+
+FashionModel = Model.inherit({
+    attributes: {
+        name: Model.attributeTypes.String    
+    }
+});
+
+var model = new FashionModel({
+    id: 1,
+    name: 'Kate'
+}); 
+model.getId() // 1
+
+ ```
 
 #### isChanged `model.isChanged([branch])`
 
@@ -215,6 +266,14 @@ model.on('change', function () {
 });
 ```
 
+#### getLastCommitted `model.getLastCommitted([branch])`
+
+Returns model last cached state.
+
+#### previous `model.previous([attr])`
+
+Returns attribute `attr` previous value or model previous state if called without arguments.  
+
 #### on `model.on([attributes], events, cb, [ctx])`
 
 Add event handler for one or multiple model events.
@@ -223,6 +282,10 @@ List of events:
 
 * `change` – some of attributes have been changed
 * `change:attributeName` – `attributeName` have been changed
+* `commit` - some of attributes have been committed to default branch
+* `branch:commit` - some of attributes have been committed to branch `branch`
+* `commit:attributeName` - `attributeName` have been committed to default branch
+* `branch:commit:attributeName` - `attributeName` have been committed to branch `branch`
 * `destruct` – model was destructed
 * `calculate` – async calculations started
 
@@ -284,9 +347,7 @@ var FashionModel = Model.inherit({
                     return $.get('/validateName', {
                         name: this.get()
                     }).then(function () {
-                        return true; //valid
-                    }, function () {
-                        return false; //invalid
+                        Vow.reject('Value is Invalid!');
                     });
                 }
             })
@@ -296,11 +357,42 @@ var FashionModel = Model.inherit({
 
 model.validate().fail(function (err) {
     if (err instanceof Model.ValidationError) {
-        console.log('Invalid attributes:' + err.attributes.join());
+        console.log('Invalid attributes:');
+        err.attributes.forEach(function (attrErr) {
+            console.log('Attribute "' + attrErr.attribute.name + '" error:', attrError);
+        });
     } else {
         return err;
     }
 }).done();
+```
+
+Fulfilled attribute validation promise means that attribute is valid, otherwise it's not. `Model.ValidationError#attributes` is array of attributes errors (`Attribute.ValidationError`).
+
+**Note:** For `Model` and `Collection` attributes `validation` method is already defined. It validates nested entity and if it's not returns promise rejected with specific error contains nested errors.
+
+If `validate` returns promise rejected with `String` this string will be used as message for `Attribute.ValidationError`. If with something else (besides `Boolean`) - rejected value will be available in `Attribute.ValidationError#data`. 
+ 
+If attribute can be validated synchronously, you can define `getValidationError` method. If it returns non-falsy value, validation promise will be rejected with returned value.
+  
+```js
+var FashionModel = Model.inherit({
+        attributes: {
+            name: Model.attributeTypes.String.inherit({
+                getValidationError: function () {
+                    if (this.get() !== 'validValue') {
+                        return 'Value is Invalid!';
+                    }
+                }
+            })
+        }
+    }),
+    model = new FashionModel();
+    
+model.validate().fail(function (err) {
+    console.log(err.attributes[0]);
+});
+
 ```
 
 #### ready `model.ready()`
@@ -342,12 +434,12 @@ var FashionModel = Model.inherit({
         storage: Model.Storage.inherit({
             find: function (model) {
                 return $.get('/models', {
-                    id: model.id
+                    id: model.getId()
                 });
             }
         })
     }),
-    model = new FashionModel(id);
+    model = new FashionModel({id: id});
 
 model.fetch().then(function () {
     model.get('name');
@@ -359,6 +451,7 @@ model.fetch().then(function () {
 ```js
 var FashionModel = Model.inherit({
         attributes: {
+            id: Model.attributeTypes.Id,
             name: Model.attributeTypes.String,
             weight: Model.attributeTypes.Number
         },
@@ -380,7 +473,7 @@ model.set({
     weight: 55
 });
 model.save().then(function () { //create
-    model.id; //storage id
+    model.getId(); //storage id
     model.set('weight', 56);
     return model.save(); //update
 }).done()
@@ -517,6 +610,97 @@ podium.get('models').forEach(function (model) {
 #### ValidationError `Model.ValidationError`
 
 Error class for validation fail report
+
+### Collection
+
+#### inherit `Collection.inherit(properties, [classPorperties])`
+
+Creates you own collection class by extending Collection. You should define `modelType` property - constructor which will be used for new models. Models that are used in collections should have declared id attribute, to make getId and related methods to work correctly.
+
+```js
+var MyCollection = Collection.inherit({
+    modelType: MyModel
+});
+```
+
+#### length `collection.length`
+
+Number of models in collection.
+
+#### at `collection.at(index)`
+
+Returns model by index.
+
+#### get `collection.get(id)`
+
+Returns model by id.
+
+#### where `collection.where(conditions)`
+
+Returns models that match the conditions.
+
+```js
+var collection = new MyCollection([{
+    name: 'John',
+    age: 40
+}, {
+    name: 'Bob',
+    age: 40
+},{
+    name: 'Jane'
+    age: 42
+}]);
+
+collection.where({age: 40}) // -> [Model.<{name: 'John', age: 40}>, Model.<{name: 'Bob', age: 40}>]
+```
+
+#### findWhere `collection.findWhere(conditions)`
+
+Same as `where` but returns first match.
+
+#### pluck `collection.pluck(attr)`
+
+Picks one attribute from each model in collection and return array of these attributes.
+
+```js
+var collection = new MyCollection([{
+    name: 'John',
+    age: 40
+}, {
+    name: 'Bob',
+    age: 40
+},{
+    name: 'Jane'
+    age: 42
+}]);
+
+collection.pluck('name') // -> ['John', 'Bob', 'Jane']
+```
+
+#### add `collection.add(models, [options])`
+
+Adds new model(s) to collection. `models` can be an object or instance of `Model` or array of objects or models. Triggers `add` event.
+
+##### `options` 
+* `options.at` - position where model(s) should be inserted. By default model adds to end of colleciton
+ 
+#### remove `collection.remove(models)`
+
+Removes models from collection. `models` can be an instance of `Model` or array of models. Triggers `remove` event.
+  
+**Note:** When model removes via `model.remove()` it will be removed from collection
+
+#### set `collection.set(models)`
+
+Removes all models in collection and adds new `models`
+
+#### Other methods
+
+Collection implements some array methods: `forEach`, `some`, `every`, `filter`, `map`, `reduce`, `find`.
+Also collection proxies methods to models: `isChanged`, `commit`, `revert`, `toJSON`.
+
+#### Model events
+All model events such as `change`, `change:attribute`, `calculate`, `commit`, `commit:attribute` also wil be triggered on collection
 
 ## run tests
 

@@ -7,6 +7,7 @@ var Model = require('../../lib/model'),
 
 module.exports = Model.inherit({
     attributes: {
+        id: Model.attributeTypes.Id,
         a: Model.attributeTypes.String.inherit({
             default: 'a-0'
         }),
@@ -22,18 +23,21 @@ module.exports = Model.inherit({
     storage: Model.Storage.inherit({
         insert: function (model) {
             return Vow.fulfill().delay(0).then(function () {
-                storage.push(model.toJSON());
-                return storage.length - 1;
+                var data = model.toJSON(),
+                    id = storage.length;
+                data.id = id;
+                storage.push(data);
+                return id;
             });
         },
         update: function (model) {
             return Vow.fulfill().delay(0).then(function () {
-                storage[model.id] = model.toJSON();
+                storage[model.getId()] = model.toJSON();
             });
         },
         find: function (model) {
             return Vow.fulfill().delay(0).then(function () {
-                var data =  storage[model.id];
+                var data =  storage[model.getId()];
                 if (data) {
                     return data;
                 } else {
@@ -43,7 +47,7 @@ module.exports = Model.inherit({
         },
         remove: function (model) {
             return Vow.fulfill().delay(0).then(function () {
-                storage[model.id] = null;
+                storage[model.getId()] = null;
             });
         }
     })
